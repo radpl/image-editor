@@ -1,0 +1,31 @@
+.header {
+    text-align: center;
+    font-weight: bold;
+    background-color:#eee;
+    color:#5a5f67;
+    width:100%
+}
+.smallLeft{
+
+    font-size:calc(5px + 1vmin);
+    text-align: left;
+    margin-left:5px;
+    margin-top:10px;
+}
+
+.smallCenter{
+
+    font-size:calc(5px + 1vmin);
+    text-align: center;
+    margin-left:5px;
+    margin-top:10px;
+}
+
+.medium  {
+    font-size:calc(5px + 2vmin);
+}
+
+.large  {
+    font-size:calc(10px + 5vmin);
+}
+

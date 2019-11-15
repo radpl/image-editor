@@ -1,0 +1,16 @@
+.imageList{
+    list-style-type:none;
+    padding:0;
+    display: inline-block;
+    text-align:center;
+}
+
+.element {
+    float: left;   
+}
+
+.image{
+    width:100px;
+    height:100px;
+    margin-left:10px;
+}

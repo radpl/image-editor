@@ -1,0 +1,42 @@
+* {
+  border: 1px solid black;
+}
+
+.container {
+  min-height: 100vh;
+  background: #ccc;
+  display: flex;
+  flex-direction: column;
+}
+
+.columns {
+  text-align: center;
+  display: flex;
+  flex:1;
+}
+
+.app-header {
+  background-color: #fff;
+  min-height: 5h;
+  font-size: calc(10px + 1vmin);
+  color: #5a5f67;
+  text-align:center;
+}
+
+h1 {
+  margin-top:0px;
+}
+
+.main-panel {
+  flex: 1;
+}
+
+.left-sidebar {
+  width: 20%;
+  background: #ff9;
+}
+
+.right-sidebar {
+  width: 20%;
+  background: #ddd;
+}
