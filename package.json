@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "html2canvas": "^1.0.0-rc.5",
     "immutability-helper": "^3.0.1",
     "react": "^16.12.0",
     "react-dnd": "^9.4.0",

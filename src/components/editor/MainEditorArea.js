@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 //import { useDrop } from 'react-dnd';
 import { DropTarget } from "react-dnd";
+import html2canvas from 'html2canvas';
 import ItemTypes from '../dnd/ItemTypes';
 import SimpleButton from '../common/SimpleButton';
 import LogoElement from '../logo/LogoElement';
@@ -80,6 +81,18 @@ class MainEditorArea extends Component {
         });
     }
 
+    downloadImage = () => {
+        let editorArea = document.querySelector('.mainArea');
+        var a = document.createElement('a');
+        // toDataURL defaults to png, so we need to request a jpeg, then convert for file download.
+
+        html2canvas(editorArea).then((canvas) => {
+            a.href = canvas.toDataURL("image/jpeg").replace("image/jpeg", "image/octet-stream");
+            a.download = 'somefilename.jpg';
+            a.click();
+            //console.log(imgData);
+        });
+    }
 
     render() {
         const { isOver, canDrop, connectDropTarget } = this.props;
@@ -118,7 +131,7 @@ class MainEditorArea extends Component {
 
         }
         return connectDropTarget(
-            <div>
+            <div className="mainArea">
                 <div style={style}>
                     {Object.keys(logos).map(key => {
                         const { left, top, render } = logos[key];
@@ -162,7 +175,7 @@ class MainEditorArea extends Component {
                         onClick={this.handleTextDelete}
                     >Delete</button>)}
                 </div>
-                <SimpleButton>Download as image</SimpleButton>
+                <SimpleButton handleClick={this.downloadImage}>Download as image</SimpleButton>
             </div>
         );
     }
