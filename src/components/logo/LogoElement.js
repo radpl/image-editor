@@ -9,7 +9,7 @@ function LogoElement({ hideSourceOnDrag = false, left, top, connectDragSource, i
     }
 
     return connectDragSource(
-        <img src={props.image} alt={props.alt} className={props.element} />
+        <img src={props.image} alt={props.alt} style={props.element} />
     );
 }
 

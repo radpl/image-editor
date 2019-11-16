@@ -5,13 +5,19 @@ import background from '../../assets/bgAssets';
 import LogoElement from './LogoElement';
 
 export default function AddLogo() {
+    const style = {
+        width: "100px",
+        height: "100px",
+        marginLeft: "10px"
+    }
+
     return (
         <div>
             <SimpleHeader size="smallLeft">Add logo</SimpleHeader>
             <ul className={styles.imageList}>
-                <li className={styles.element}><LogoElement image={background.bg1} element={styles.image} alt="image1" /></li>
-                <li className={styles.element} ><LogoElement image={background.bg2} element={styles.image} alt="image2" /></li>
-                <li className={styles.element} ><LogoElement image={background.bg3} element={styles.image} alt="image3" /></li>
+                <li className={styles.element}><LogoElement id="1" image={background.bg1} element={style} alt="image1" /></li>
+                <li className={styles.element} ><LogoElement id="2" image={background.bg2} element={style} alt="image2" /></li>
+                <li className={styles.element} ><LogoElement id="3" image={background.bg3} element={style} alt="image3" /></li>
 
             </ul>
         </div>

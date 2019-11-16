@@ -15,16 +15,26 @@ class MainEditorArea extends Component {
         }
     }
 
+    // moveBox(id, left, top) {
+    //     this.setState(
+    //         update(this.state, {
+    //             logos: {
+    //                 [id]: {
+    //                     $merge: { left, top },
+    //                 },
+    //             },
+    //         }),
+    //     )
+
+
+    // }
+
     moveBox(id, left, top) {
-        // this.setState(
-        //     update(this.state, {
-        //         logos: {
-        //             [id]: {
-        //                 $merge: { left, top },
-        //             },
-        //         },
-        //     }),
-        // )
+        const temp = Object.assign({}, this.state.logos);
+        temp[id] = { left, top };
+        this.setState({
+            logos: { ...temp }
+        });
     }
 
 
@@ -38,7 +48,8 @@ class MainEditorArea extends Component {
             backgroundColor: "white",
             textAlign: "center",
             marginTop: "2em",
-            backgroundImage: `url(${this.props.selectedBackground})`
+            backgroundImage: `url(${this.props.selectedBackground})`,
+            position: "relative"
         };
 
         const imageStyle = {
@@ -58,7 +69,8 @@ class MainEditorArea extends Component {
                                 left={left}
                                 top={top}
                                 hideSourceOnDrag="true"
-                                element={imageStyle}
+                                image={background["bg" + key]}
+                                element={{ ...imageStyle, left, top }}
                             />
                         )
                     })}
@@ -75,10 +87,16 @@ export default DropTarget(ItemTypes.LOGO,
                 return;
             }
             const item = monitor.getItem();
+
             const delta = monitor.getDifferenceFromInitialOffset();
-            const left = Math.round(item.left + delta.x);
-            const top = Math.round(item.top + delta.y);
-            component.moveBox(item.id, left, top);
+            if (item.id && item.left & item.top) {
+                const left = Math.round(item.left + delta.x);
+                const top = Math.round(item.top + delta.y);
+                component.moveBox(item.id, left, top);
+            } else {
+                component.moveBox(item.id, 100, 100);
+
+            }
         }
     },
     (connect, monitor) => ({
