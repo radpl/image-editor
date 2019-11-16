@@ -11,25 +11,34 @@ export default class App extends Component {
     super()
 
     this.state = {
-      background: background.empty
+      background: background.empty,
+      renderText: {
+        status: false,
+        value: "",
+        font: ""
+      }
     }
 
     this.handleSelectBg = this.handleSelectBg.bind(this);
     this.handleDeleteBg = this.handleDeleteBg.bind(this);
+    this.handleAddText = this.handleAddText.bind(this);
   }
 
   handleSelectBg(image) {
-    this.setState({
-      background: image
-    })
+    this.setState({ background: image });
 
   }
   handleDeleteBg(image) {
-    this.setState({
-      background: background.empty
-    })
-
+    this.setState({ background: background.empty })
   }
+
+  handleAddText(status, value, font) {
+    const temp = { ...this.state.renderText, status, value, font };
+    this.setState({
+      renderText: temp
+    })
+  }
+
   render() {
     return (
       <div className="container">
@@ -46,10 +55,12 @@ export default class App extends Component {
           <div className="main-panel">
             <ImageEditor
               selectedBackground={this.state.background}
+              renderText={this.state.renderText}
+              handleAddText={this.handleAddText}
             />
           </div>
           <div className="right-sidebar">
-            <LogoContainer />
+            <LogoContainer handleAddText={this.handleAddText} />
           </div>
         </div>
       </div>

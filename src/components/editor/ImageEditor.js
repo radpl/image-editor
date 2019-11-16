@@ -7,7 +7,11 @@ export default function ImageEditor(props) {
     return (
         <div className={styles.mainContainer}>
             <SimpleHeader size="medium">Simple Editor</SimpleHeader>
-            <MainEditorArea selectedBackground={props.selectedBackground} />
+            <MainEditorArea
+                selectedBackground={props.selectedBackground}
+                renderText={props.renderText}
+                handleAddText={props.handleAddText}
+            />
         </div>
     )
 }

@@ -1,3 +1,4 @@
-export default {
-    LOGO: "logo"
-};
+export default [
+    "logo",
+    'text'
+];
