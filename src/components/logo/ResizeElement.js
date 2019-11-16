@@ -2,32 +2,27 @@ import React from 'react'
 import { DragSource } from "react-dnd";
 import ItemTypes from "../dnd/ItemTypes";
 
-function LogoElement({ hideSourceOnDrag = false, left, top, width, height, connectDragSource, isDragging, ...props }) {
+function ResizeElement({ hideSourceOnDrag = true, left, top, width, height, connectDragSource, isDragging, ...props }) {
 
     // if (isDragging && hideSourceOnDrag) {
     //     return null;
     // }
 
     return connectDragSource(
-        <img
-            id={props.id}
-            src={props.image}
-            alt={props.alt}
-            style={props.element}
-            onClick={props.handleClick} />
+        <div id={props.id} style={props.resizeStyle}></div>
     );
 }
 
 export default DragSource(
-    ItemTypes[0],
+    ItemTypes[2],
     {
         beginDrag(props) {
             const { id, left, top, width, height } = props;
-            return { id, left, top, width, height, type: ItemTypes[0] };
+            return { id, left, top, width, height, type: ItemTypes[2] };
         }
     },
     (connect, monitor) => ({
         connectDragSource: connect.dragSource(),
         isDragging: monitor.isDragging()
     })
-)(LogoElement);
+)(ResizeElement);

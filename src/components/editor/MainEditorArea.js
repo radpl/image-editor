@@ -7,6 +7,8 @@ import SimpleButton from '../common/SimpleButton';
 import LogoElement from '../logo/LogoElement';
 import background from '../../assets/bgAssets';
 import TextElement from '../text/TextElement';
+import ResizeElement from '../logo/ResizeElement';
+
 
 class MainEditorArea extends Component {
     constructor(props) {
@@ -21,17 +23,30 @@ class MainEditorArea extends Component {
         this.handleTextClick = this.handleTextClick.bind(this);
     }
 
-    moveLogo(id, left, top) {
+    moveLogo(id, left, top, width, height) {
         //refarctor to use prevstate
         const temp = Object.assign({}, this.state.logos);
-        temp[id] = { left, top, clicked: false, render: true };
+        temp[id] = { left, top, width, height, clicked: false, render: true };
         this.setState({
             logos: { ...temp }
         });
     }
+
+    resizeLogo(id, deltaLeft, deltaTop, width, height) {
+
+        const widthChg = width + deltaLeft;
+        const heightChg = height + deltaTop;
+
+        const temp = Object.assign({}, this.state.logos);
+        temp[id] = { left: temp[id].left, top: temp[id].top, width: widthChg, height: heightChg, clicked: false, render: true };
+
+        this.setState({
+            logos: { ...temp }
+        });
+
+    }
+
     moveText(id, left, top) {
-        //refarctor to use prevstate
-        //const temp = Object.assign({}, this.state.text);
         const obj = Object.assign({}, this.state.text, { id, left, top });
         this.setState({
             text: obj
@@ -84,14 +99,24 @@ class MainEditorArea extends Component {
     downloadImage = () => {
         let editorArea = document.querySelector('.mainArea');
         var a = document.createElement('a');
-        // toDataURL defaults to png, so we need to request a jpeg, then convert for file download.
-
         html2canvas(editorArea).then((canvas) => {
             a.href = canvas.toDataURL("image/jpeg").replace("image/jpeg", "image/octet-stream");
-            a.download = 'somefilename.jpg';
+            a.download = 'myImage.jpg';
             a.click();
-            //console.log(imgData);
         });
+    }
+
+    calculateBottom(imageStyle, resizeStyle, left, top) {
+
+        const ext = imageStyle.width.slice(-2);
+        let width = +imageStyle.width.replace(ext, "");
+        let height = +imageStyle.height.replace(ext, "");
+        return { ...resizeStyle, left: (left + width), top: (top + height) }
+
+    }
+
+    returnNumFromPixels(value) {
+        return +value.replace("px", "")
     }
 
     render() {
@@ -110,9 +135,7 @@ class MainEditorArea extends Component {
         };
 
         const imageStyle = {
-            position: "absolute",
-            width: "100px",
-            height: "100px",
+            position: "absolute"
         }
 
         const buttonStyle = {
@@ -123,18 +146,26 @@ class MainEditorArea extends Component {
 
         const textStyle = {
             position: "absolute",
-            width: "100px",
-            height: "50px",
+            maxWidth: "250px",
+            maxHeight: "100px",
             fontFamily: `${this.props.renderText.font}`,
             fontSize: "20px",
             color: "black"
 
         }
+
+        const resizeStyle = {
+            width: "5px",
+            height: "5px",
+            backgroundColor: "black",
+            position: "absolute"
+        }
+
         return connectDropTarget(
             <div className="mainArea">
                 <div style={style}>
                     {Object.keys(logos).map(key => {
-                        const { left, top, render } = logos[key];
+                        const { left, top, width, height, render } = logos[key];
                         if (!render) return false;
                         return (
                             <LogoElement
@@ -142,21 +173,34 @@ class MainEditorArea extends Component {
                                 id={key}
                                 left={left}
                                 top={top}
+                                width={width}
+                                height={height}
                                 hideSourceOnDrag="true"
                                 image={background["bg" + key]}
-                                element={{ ...imageStyle, left, top }}
-                                buttonStyle={{ ...buttonStyle, left, top: (+top + 110) }}
-                                mainStyle={{ ...imageStyle, left, top }}
+                                element={{ ...imageStyle, left, top, width: width + "px", height: height + "px" }}
                                 handleClick={this.handleClick}
                             />
                         )
                     })}
                     {Object.keys(logos).map(key => {
-                        const { left, top, clicked, render } = logos[key];
+                        const { left, top, width, height, render } = logos[key];
+                        if (!render) return false;
+                        const elleft = left + width;
+                        const eltop = top + height;
+                        return <ResizeElement
+                            id={key}
+                            width={width}
+                            height={height}
+                            left={left}
+                            top={top}
+                            resizeStyle={{ ...resizeStyle, left: elleft, top: eltop }} />
+                    })}
+                    {Object.keys(logos).map(key => {
+                        const { left, top, height, clicked, render } = logos[key];
                         if (!render) return false;
                         return (
                             clicked && <button id={key}
-                                style={{ ...buttonStyle, left, top: (+top + 110) }}
+                                style={{ ...buttonStyle, left, top: (+top + height + 10) }}
                                 onClick={this.handleDelete}
                             >Delete</button>
                         )
@@ -192,9 +236,9 @@ export default DropTarget(ItemTypes,
                 if (item.id && item.left & item.top) {
                     const left = Math.round(item.left + delta.x);
                     const top = Math.round(item.top + delta.y);
-                    component.moveLogo(item.id, left, top);
+                    component.moveLogo(item.id, left, top, item.width, item.height);
                 } else {
-                    component.moveLogo(item.id, 100, 100);
+                    component.moveLogo(item.id, 100, 100, 100, 100);
                 }
             }
             if (item.type === ItemTypes[1]) {
@@ -203,7 +247,31 @@ export default DropTarget(ItemTypes,
                 component.moveText(item.id, left, top);
             }
 
-        }
+            if (item.type === ItemTypes[2]) {
+                const deltaLeft = delta.x;
+                const deltaTop = delta.y;
+                //const left = Math.round((item.left - item.width) + delta.x);
+                //const top = Math.round((item.top - item.height) + delta.y);
+                component.resizeLogo(item.id, deltaLeft, deltaTop, item.width, item.height);
+            }
+        },
+        hover(props, monitor, component) {
+            if (!component) {
+                return;
+            }
+            //console.log("hover", monitor.getClientOffset());
+            const item = monitor.getItem();
+            const delta = monitor.getDifferenceFromInitialOffset();
+            //console.log("item", item);
+            //console.log("delta", delta);
+            if (item.type === ItemTypes[2]) {
+                const deltaLeft = delta.x;
+                const deltaTop = delta.y;
+                //const left = Math.round((item.left - item.width) + delta.x);
+                //const top = Math.round((item.top - item.height) + delta.y);
+                component.resizeLogo(item.id, deltaLeft, deltaTop, item.width, item.height);
+            }
+        },
 
     },
     (connect, monitor) => ({

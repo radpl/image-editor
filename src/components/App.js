@@ -4,7 +4,7 @@ import ImageEditor from './editor/ImageEditor';
 import BackgroundContainer from './background/BackgroundContainer';
 import LogoContainer from './logo/LogoContainer';
 import background from '../assets/bgAssets';
-
+import { getRandom, toDataUrl, searchImages } from '../api/sourceApi';
 
 export default class App extends Component {
   constructor() {
@@ -12,6 +12,7 @@ export default class App extends Component {
 
     this.state = {
       background: background.empty,
+      images: [],
       renderText: {
         status: false,
         value: "",
@@ -22,12 +23,14 @@ export default class App extends Component {
     this.handleSelectBg = this.handleSelectBg.bind(this);
     this.handleDeleteBg = this.handleDeleteBg.bind(this);
     this.handleAddText = this.handleAddText.bind(this);
+    this.handleSearchImages = this.handleSearchImages.bind(this);
   }
 
   handleSelectBg(image) {
     this.setState({ background: image });
 
   }
+
   handleDeleteBg(image) {
     this.setState({ background: background.empty })
   }
@@ -38,6 +41,91 @@ export default class App extends Component {
       renderText: temp
     })
   }
+
+  handleSearchImages(searchTerm) {
+    this.setState({
+      images: []
+    })
+    this.getSearchedImages(4, searchTerm);
+  }
+
+  componentDidMount() {
+    //refactor
+    if (this.state.images.length === 0) {
+      this.getRandomImages(4);
+      // getRandom().then((response) => {
+      //   toDataUrl(response.url).then(img => {
+      //     this.setState(prevState => ({
+      //       images: [...prevState.images, "data:image/png[jpg];base64," + img]
+      //     }));
+      //   });
+      // });
+
+      // setTimeout(() => {
+      //   getRandom().then((response) => {
+      //     toDataUrl(response.url).then(img => {
+      //       this.setState(prevState => ({
+      //         images: [...prevState.images, "data:image/png[jpg];base64," + img]
+      //       }));
+      //     });
+      //   });
+      // }, 5000);
+
+      // setTimeout(() => {
+      //   getRandom().then((response) => {
+      //     toDataUrl(response.url).then(img => {
+      //       this.setState(prevState => ({
+      //         images: [...prevState.images, "data:image/png[jpg];base64," + img]
+      //       }));
+      //     });
+      //   });
+      // }, 10000);
+
+      // setTimeout(() => {
+      //   getRandom().then((response) => {
+      //     toDataUrl(response.url).then(img => {
+      //       this.setState(prevState => ({
+      //         images: [...prevState.images, "data:image/png[jpg];base64," + img]
+      //       }));
+      //     });
+      //   });
+      // }, 15000);
+    }
+  }
+
+  getRandomImages(number) {
+    for (let i = 0; i < number; i++) {
+      setTimeout(() => {
+        console.log('fetch image');
+        getRandom().then((response) => {
+          toDataUrl(response.url).then(img => {
+            this.setState(prevState => ({
+              images: [...prevState.images, "data:image/png[jpg];base64," + img]
+            }));
+          });
+        });
+      }, 4000 * i)
+
+    }
+  }
+
+  getSearchedImages(number, serachTerm) {
+    for (let i = 0; i < number; i++) {
+      setTimeout(() => {
+        console.log('fetch image');
+        searchImages(serachTerm).then((response) => {
+          toDataUrl(response.url).then(img => {
+            this.setState(prevState => ({
+              images: [...prevState.images, "data:image/png[jpg];base64," + img]
+            }));
+          });
+        });
+      }, 4000 * i)
+
+    }
+  }
+
+
 
   render() {
     return (
@@ -50,6 +138,9 @@ export default class App extends Component {
             <BackgroundContainer
               handleSelectBg={this.handleSelectBg}
               handleDeleteBg={this.handleDeleteBg}
+              handleSearchImages={this.handleSearchImages}
+              backgroundImages={this.state.images}
+
             />
           </div>
           <div className="main-panel">
@@ -57,6 +148,7 @@ export default class App extends Component {
               selectedBackground={this.state.background}
               renderText={this.state.renderText}
               handleAddText={this.handleAddText}
+              backgroundImages={this.state.images}
             />
           </div>
           <div className="right-sidebar">
