@@ -1,7 +1,6 @@
 import React from 'react'
 import SimpleHeader from '../common/SimpleHeader';
 import styles from './logoimages.module.css';
-import background from '../../assets/bgAssets';
 import logos from '../../assets/logoAssets';
 import LogoElement from './LogoElement';
 

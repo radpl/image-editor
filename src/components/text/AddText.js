@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import SimpleHeader from '../common/SimpleHeader';
 import InputField from '../common/InputField';
-import RadioButtons from '../common/RadioButtons';
+import RadioButtons from './RadioButtons';
 import SimpleButton from '../common/SimpleButton';
 import ColorPicker from './ColorPicker';
 

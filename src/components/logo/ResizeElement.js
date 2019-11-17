@@ -1,6 +1,7 @@
 import React from 'react'
 import { DragSource } from "react-dnd";
 import ItemTypes from "../dnd/ItemTypes";
+import './resize.css';
 
 function ResizeElement({ hideSourceOnDrag = true, left, top, width, height, connectDragSource, isDragging, ...props }) {
 
@@ -9,7 +10,11 @@ function ResizeElement({ hideSourceOnDrag = true, left, top, width, height, conn
     }
 
     return connectDragSource(
-        <div id={props.id} style={props.resizeStyle}></div>
+        <div
+            id={props.id}
+            style={props.resizeStyle}
+            className="mainResize"
+        ></div>
     );
 }
 

@@ -1,12 +1,13 @@
 import React from 'react'
 import { DragSource } from "react-dnd";
 import ItemTypes from "../dnd/ItemTypes";
-import styles from './logoimages.module.css';
+//import styles from './logoimages.module.css';
 function LogoElement({ hideSourceOnDrag = false, left, top, width, height, connectDragSource, isDragging, ...props }) {
 
     // if (isDragging && hideSourceOnDrag) {
     //     return null;
     // }
+
 
     return connectDragSource(
         <img

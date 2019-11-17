@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-//import { useDrop } from 'react-dnd';
 import { DropTarget } from "react-dnd";
 import html2canvas from 'html2canvas';
 import ItemTypes from '../dnd/ItemTypes';
 import SimpleButton from '../common/SimpleButton';
 import LogoElement from '../logo/LogoElement';
-//import background from '../../assets/bgAssets';
 import logoImages from '../../assets/logoAssets';
 import TextElement from '../text/TextElement';
 import ResizeElement from '../logo/ResizeElement';
@@ -45,7 +43,6 @@ class MainEditorArea extends Component {
         this.setState({
             logos: { ...temp }
         });
-
     }
 
     moveText(id, left, top) {
@@ -108,21 +105,6 @@ class MainEditorArea extends Component {
         });
     }
 
-    calculateBottom(imageStyle, resizeStyle, left, top) {
-
-        const ext = imageStyle.width.slice(-2);
-        let width = +imageStyle.width.replace(ext, "");
-        let height = +imageStyle.height.replace(ext, "");
-        return { ...resizeStyle, left: (left + width), top: (top + height) }
-
-    }
-
-    returnNumFromPixels(value) {
-        return +value.replace("px", "")
-    }
-
-
-
     componentDidUpdate() {
         if (this.props.renderText.initial && this.props.renderText.status) {
             const el = document.getElementById("t1");
@@ -147,7 +129,9 @@ class MainEditorArea extends Component {
                         left: (200 - (width / 2)),
                         value: this.props.renderText.value,
                         font: this.props.renderText.font,
-                        initial: false
+                        initial: false,
+                        width,
+                        height
                     });
 
                 this.setState({
@@ -180,6 +164,9 @@ class MainEditorArea extends Component {
         const buttonStyle = {
             position: "absolute",
             height: "20px",
+            fontSize: "0.7rem",
+            margin: 0,
+            padding: "0.1em"
         }
 
         const textStyle = {
@@ -188,51 +175,49 @@ class MainEditorArea extends Component {
             maxHeight: "100px",
             fontFamily: `${this.props.renderText.font}`,
             fontSize: "20px",
-            color: `${this.props.renderText.color}`
-
+            color: `${this.props.renderText.color}`,
         }
 
         const resizeStyle = {
-            width: "5px",
-            height: "5px",
-            backgroundColor: "black",
+            width: "12px",
+            height: "12px",
+            backgroundColor: this.props.renderText.color ? `${this.props.renderText.color}` : 'black',
             position: "absolute",
             cursor: "pointer"
         }
 
         return connectDropTarget(
             <div >
-                <div className={`${styles.mainArea} download`} style={style}>
+                <div className={`${styles.mainArea} download`} style={style} onMouseOver={(e) => console.log('main mouse over')}>
                     {Object.keys(logos).map(key => {
                         const { left, top, width, height, render } = logos[key];
                         if (!render) return false;
+                        const elleft = left - 9 + width;
+                        const eltop = top - 9 + height;
                         return (
-                            <LogoElement
-                                key={key}
-                                id={key}
-                                left={left}
-                                top={top}
-                                width={width}
-                                height={height}
-                                hideSourceOnDrag="true"
-                                image={logoImages["logo" + key]}
-                                element={{ ...imageStyle, left, top, width: width + "px", height: height + "px" }}
-                                handleClick={this.handleClick}
-                            />
+                            <>
+                                <LogoElement
+                                    key={key}
+                                    id={key}
+                                    left={left}
+                                    top={top}
+                                    width={width}
+                                    height={height}
+                                    hideSourceOnDrag="true"
+                                    image={logoImages["logo" + key]}
+                                    element={{ ...imageStyle, left, top, width: width + "px", height: height + "px" }}
+                                    handleClick={this.handleClick}
+                                />
+                                <ResizeElement
+                                    id={key}
+                                    width={width}
+                                    height={height}
+                                    left={left - 9}
+                                    top={top - 9}
+                                    resizeStyle={{ ...resizeStyle, left: elleft, top: eltop }}
+                                />
+                            </>
                         )
-                    })}
-                    {Object.keys(logos).map(key => {
-                        const { left, top, width, height, render } = logos[key];
-                        if (!render) return false;
-                        const elleft = left + width;
-                        const eltop = top + height;
-                        return <ResizeElement
-                            id={key}
-                            width={width}
-                            height={height}
-                            left={left}
-                            top={top}
-                            resizeStyle={{ ...resizeStyle, left: elleft, top: eltop }} />
                     })}
                     {Object.keys(logos).map(key => {
                         const { left, top, height, width, clicked, render } = logos[key];
@@ -256,11 +241,18 @@ class MainEditorArea extends Component {
                         handleClick={this.handleTextClick}
                     >{this.props.renderText.value}</TextElement>
                     }
-                    {this.props.renderText.status && this.state.text.clicked && (<button id={this.state.text.id}
-                        style={{ ...buttonStyle, left: this.state.text.left, top: (+this.state.text.top + this.props.renderText.height + 5) }}
-                        onClick={this.handleTextDelete}
-                    >Delete</button>)}
+                    {this.props.renderText.status && this.state.text.clicked &&
+                        (<button id={this.state.text.id}
+                            style={{
+                                ...buttonStyle,
+                                left: this.state.text.left,
+                                top: (+this.state.text.top + this.state.text.height),
+                                width: this.state.text.width
+                            }}
+                            onClick={this.handleTextDelete}
+                        >Delete</button>)}
                 </div>
+
                 <SimpleButton handleClick={this.downloadImage}>Download as image</SimpleButton>
             </div>
         );
@@ -278,7 +270,7 @@ export default DropTarget(ItemTypes,
                 if (item.id && item.left & item.top) {
                     const left = Math.round(item.left + delta.x);
                     const top = Math.round(item.top + delta.y);
-                    component.moveLogo(item.id, left, top, item.width, item.height);
+                    component.moveLogo(item.id, left, top, item.width, item.height, item.mouseOver);
                 } else {
                     component.moveLogo(item.id, 100, 100, 100, 100);
                 }
