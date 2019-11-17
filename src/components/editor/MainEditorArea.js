@@ -15,7 +15,7 @@ class MainEditorArea extends Component {
         super(props)
         this.state = {
             logos: {},
-            text: { id: "t1", top: 100, left: 100, clicked: false }
+            text: { id: "t1", top: 180, left: 120, clicked: false, value: "", font: "", initial: true }
         }
         this.handleClick = this.handleClick.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
@@ -34,11 +34,12 @@ class MainEditorArea extends Component {
 
     resizeLogo(id, deltaLeft, deltaTop, width, height) {
 
-        const widthChg = width + deltaLeft;
-        const heightChg = height + deltaTop;
-
+        let widthChg = width + deltaLeft;
+        //const heightChg = height + deltaTop;
+        if (widthChg > 150) widthChg = 150;
+        if (widthChg < 30) widthChg = 30;
         const temp = Object.assign({}, this.state.logos);
-        temp[id] = { left: temp[id].left, top: temp[id].top, width: widthChg, height: heightChg, clicked: false, render: true };
+        temp[id] = { left: temp[id].left, top: temp[id].top, width: widthChg, height: widthChg, clicked: false, render: true };
 
         this.setState({
             logos: { ...temp }
@@ -86,7 +87,7 @@ class MainEditorArea extends Component {
     }
 
     handleTextDelete() {
-        this.props.handleAddText(false, this.props.renderText.value, this.props.renderText.font);
+        this.props.handleAddText(false, false, this.props.renderText.value, this.props.renderText.font);
 
         const el = Object.assign({}, this.state.text);
         el.clicked = false;
@@ -119,6 +120,42 @@ class MainEditorArea extends Component {
         return +value.replace("px", "")
     }
 
+
+
+    componentDidUpdate() {
+        if (this.props.renderText.initial && this.props.renderText.status) {
+            const el = document.getElementById("t1");
+            const width = el.offsetWidth;
+            const height = el.offsetHeight;
+            console.log(width, height);
+            if (this.state.text.initial) {
+                const obj = Object.assign({}, this.state.text,
+                    {
+                        value: this.props.renderText.value,
+                        font: this.props.renderText.font
+                    });
+
+                this.setState({
+                    text: obj
+                });
+            }
+            if (this.state.text.initial && width > 2) {
+                const el = Object.assign({}, this.state.text,
+                    {
+                        top: (200 - (height / 2)),
+                        left: (200 - (width / 2)),
+                        value: this.props.renderText.value,
+                        font: this.props.renderText.font,
+                        initial: false
+                    });
+
+                this.setState({
+                    text: el
+                });
+            }
+        }
+    }
+
     render() {
         const { isOver, canDrop, connectDropTarget } = this.props;
         console.log(isOver, canDrop);
@@ -135,12 +172,12 @@ class MainEditorArea extends Component {
         };
 
         const imageStyle = {
-            position: "absolute"
+            position: "absolute",
+            cursor: "grab"
         }
 
         const buttonStyle = {
             position: "absolute",
-            width: "100px",
             height: "20px",
         }
 
@@ -158,7 +195,8 @@ class MainEditorArea extends Component {
             width: "5px",
             height: "5px",
             backgroundColor: "black",
-            position: "absolute"
+            position: "absolute",
+            cursor: "pointer"
         }
 
         return connectDropTarget(
@@ -196,26 +234,29 @@ class MainEditorArea extends Component {
                             resizeStyle={{ ...resizeStyle, left: elleft, top: eltop }} />
                     })}
                     {Object.keys(logos).map(key => {
-                        const { left, top, height, clicked, render } = logos[key];
+                        const { left, top, height, width, clicked, render } = logos[key];
                         if (!render) return false;
                         return (
                             clicked && <button id={key}
-                                style={{ ...buttonStyle, left, top: (+top + height + 10) }}
+                                style={{ ...buttonStyle, left, top: (+top + height + 10), width }}
                                 onClick={this.handleDelete}
                             >Delete</button>
                         )
                     })}
-                    {this.props.renderText.status
-                        && <TextElement
-                            id={this.state.text.id}
-                            top={this.state.text.top}
-                            left={this.state.text.left} t
-                            textStyle={{ ...textStyle, top: this.state.text.top, left: this.state.text.left }}
-                            handleClick={this.handleTextClick}
-                        >{this.props.renderText.value}</TextElement>
+                    {this.props.renderText.status && <TextElement
+                        id={this.state.text.id}
+                        top={this.state.text.top}
+                        left={this.state.text.left}
+                        textStyle={{
+                            ...textStyle,
+                            top: this.state.text.top,
+                            left: this.state.text.left,
+                        }}
+                        handleClick={this.handleTextClick}
+                    >{this.state.text.value}</TextElement>
                     }
                     {this.props.renderText.status && this.state.text.clicked && (<button id={this.state.text.id}
-                        style={{ ...buttonStyle, left: this.state.text.left, top: (+this.state.text.top + 110) }}
+                        style={{ ...buttonStyle, left: this.state.text.left, top: (+this.state.text.top + this.props.renderText.height + 5) }}
                         onClick={this.handleTextDelete}
                     >Delete</button>)}
                 </div>
@@ -259,16 +300,11 @@ export default DropTarget(ItemTypes,
             if (!component) {
                 return;
             }
-            //console.log("hover", monitor.getClientOffset());
             const item = monitor.getItem();
             const delta = monitor.getDifferenceFromInitialOffset();
-            //console.log("item", item);
-            //console.log("delta", delta);
             if (item.type === ItemTypes[2]) {
                 const deltaLeft = delta.x;
                 const deltaTop = delta.y;
-                //const left = Math.round((item.left - item.width) + delta.x);
-                //const top = Math.round((item.top - item.height) + delta.y);
                 component.resizeLogo(item.id, deltaLeft, deltaTop, item.width, item.height);
             }
         },

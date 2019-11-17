@@ -25,12 +25,17 @@ export default function AddText(props) {
         setFont(mapping[value]);
     }
 
+    const addTextPosition = (event) => {
+        event.preventDefault();
+        props.handleAddText(true, true, inputValue, fontFamily)
+    }
+
     return (
         <div>
             <SimpleHeader size="smallLeft">Add text</SimpleHeader>
             <InputField onChange={handleChange} value={inputValue} placeholder="Input your text" />
             <RadioButtons handleClick={handleFont} />
-            <SimpleButton handleClick={(e) => { e.preventDefault(); props.handleAddText(true, inputValue, fontFamily) }}>Add Text</SimpleButton>
+            <SimpleButton handleClick={addTextPosition}>Add Text</SimpleButton>
         </div>
     )
 }

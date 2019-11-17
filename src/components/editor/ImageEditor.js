@@ -11,6 +11,7 @@ export default function ImageEditor(props) {
                 selectedBackground={props.selectedBackground}
                 renderText={props.renderText}
                 handleAddText={props.handleAddText}
+                setInitialPosition={props.setInitialPosition}
             />
         </div>
     )

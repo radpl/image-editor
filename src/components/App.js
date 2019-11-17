@@ -13,17 +13,14 @@ export default class App extends Component {
     this.state = {
       background: background.empty,
       images: [],
-      renderText: {
-        status: false,
-        value: "",
-        font: ""
-      }
+      renderText: { status: false, initial: true, value: "", font: "" }
     }
 
     this.handleSelectBg = this.handleSelectBg.bind(this);
     this.handleDeleteBg = this.handleDeleteBg.bind(this);
     this.handleAddText = this.handleAddText.bind(this);
     this.handleSearchImages = this.handleSearchImages.bind(this);
+    this.setInitialPosition = this.setInitialPosition.bind(this);
   }
 
   handleSelectBg(image) {
@@ -35,7 +32,14 @@ export default class App extends Component {
     this.setState({ background: background.empty })
   }
 
-  handleAddText(status, value, font) {
+  setInitialPosition(value) {
+    const temp = { ...this.state.renderText, initial: value };
+    this.setState({
+      renderText: temp
+    })
+  }
+
+  handleAddText(status, initial, value, font) {
     const temp = { ...this.state.renderText, status, value, font };
     this.setState({
       renderText: temp
@@ -149,6 +153,7 @@ export default class App extends Component {
               renderText={this.state.renderText}
               handleAddText={this.handleAddText}
               backgroundImages={this.state.images}
+              setInitialPosition={this.setInitialPosition}
             />
           </div>
           <div className="right-sidebar">

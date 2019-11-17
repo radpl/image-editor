@@ -4,9 +4,9 @@ import ItemTypes from "../dnd/ItemTypes";
 
 function ResizeElement({ hideSourceOnDrag = true, left, top, width, height, connectDragSource, isDragging, ...props }) {
 
-    // if (isDragging && hideSourceOnDrag) {
-    //     return null;
-    // }
+    if (isDragging && hideSourceOnDrag) {
+        return null;
+    }
 
     return connectDragSource(
         <div id={props.id} style={props.resizeStyle}></div>
