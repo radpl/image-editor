@@ -1,12 +1,10 @@
-* {
-  border: 1px solid black;
-}
 
 .container {
   min-height: 100vh;
-  background: #ccc;
   display: flex;
   flex-direction: column;
+  padding-top: 0.5em;
+  margin-bottom:2em;
 }
 
 .columns {
@@ -29,14 +27,22 @@ h1 {
 
 .main-panel {
   flex: 1;
+  border:dotted 1px #aaa;
+  margin-left:0.25em;
+  margin-right:0.25em;
 }
 
 .left-sidebar {
   width: 20%;
-  background: #ff9;
+  border:dotted 1px #aaa;
+  margin-left:0.5em;
+  margin-right:0.25em;
 }
 
 .right-sidebar {
   width: 20%;
-  background: #ddd;
+  border:dotted 1px #aaa;
+  margin-left:0.25em;
+  margin-right:0.5em;
 }
+

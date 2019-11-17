@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Londrina+Sketch|Open+Sans&display=swap');
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+  font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -12,3 +12,60 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+/* Syling of buttons from https://codemyui.com/hand-drawn-border-buttons-css/*/
+button{
+      align-self:center;
+      /* background:transparent; */
+      background-color: white;
+      padding:1rem 1rem;
+      margin:0 1rem;
+      color:#41403E;
+      font-size:1rem;
+      letter-spacing:1px;
+      outline:none;
+      border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+      border:solid 2px #41403E;
+      margin-top:0.3em;
+      transition: background-color 1s;
+    }
+button:hover{
+         /* box-shadow:2px 8px 4px -6px hsla(0,0%,0%,.3); */
+         background-color:lightgrey;
+        }
+
+input, textarea{
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+  border:solid 1px #85858f;
+  padding-top: 0.5em;
+  padding-bottom:0.5em;
+  margin-top:1em;
+  font-size: 1rem;
+  padding-left:0.2em;
+  margin-left:0.25em;
+  margin-right:0.5em;
+  transition:background-color 0.5s;
+  outline:none;
+
+}
+input[type=text] {
+  box-sizing: border-box;
+  width:98%;
+}
+
+input[type=radio] {
+  margin:0 0.3em;
+}
+
+textarea{
+  box-sizing: border-box;
+  width:98%;
+}
+
+input:hover {
+  background-color:#efefef;
+  color:#41403E;
+}
+
+
+

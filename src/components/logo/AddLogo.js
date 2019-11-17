@@ -6,9 +6,8 @@ import LogoElement from './LogoElement';
 
 export default function AddLogo() {
     const style = {
-        width: "100px",
-        height: "100px",
-        marginLeft: "10px"
+        width: "100%",
+        height: "100%"
     }
 
     return (

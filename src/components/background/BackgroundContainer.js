@@ -20,7 +20,6 @@ export default function BackgroundContainer(props) {
 
     return (
         <div>
-            <SimpleHeader size="medium">Left sidebar</SimpleHeader>
             <SimpleHeader size="smallCenter">Search topic</SimpleHeader>
             <form onSubmit={handleSubmit}>
                 <InputText onChange={handleChange} value={inputValue} placeholder="Search and enter" />

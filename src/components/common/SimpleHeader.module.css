@@ -1,7 +1,6 @@
 .header {
     text-align: center;
     font-weight: bold;
-    background-color:#eee;
     color:#5a5f67;
     width:100%
 }
@@ -23,9 +22,11 @@
 
 .medium  {
     font-size:calc(5px + 2vmin);
+    margin-top:0.5em;
 }
 
 .large  {
     font-size:calc(10px + 5vmin);
+    margin-top:0.5em;
 }
 

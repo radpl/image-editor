@@ -1,7 +1,11 @@
-.main {
+.mainArea {
     max-width:400px;
     max-height:400px;
     background-color:white;
     text-align:center;
     margin-top: 2em;
+    /* box-shadow: 20px 38px 34px -26px hsla(0,0%,0%,.2); */
+    /* border-radius: 255px 5px 225px 5px/5px 225px 5px 255px; */
+    border:dotted 2px #85858f;
+
 }

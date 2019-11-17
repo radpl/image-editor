@@ -57,43 +57,6 @@ export default class App extends Component {
     //refactor
     if (this.state.images.length === 0) {
       this.getRandomImages(4);
-      // getRandom().then((response) => {
-      //   toDataUrl(response.url).then(img => {
-      //     this.setState(prevState => ({
-      //       images: [...prevState.images, "data:image/png[jpg];base64," + img]
-      //     }));
-      //   });
-      // });
-
-      // setTimeout(() => {
-      //   getRandom().then((response) => {
-      //     toDataUrl(response.url).then(img => {
-      //       this.setState(prevState => ({
-      //         images: [...prevState.images, "data:image/png[jpg];base64," + img]
-      //       }));
-      //     });
-      //   });
-      // }, 5000);
-
-      // setTimeout(() => {
-      //   getRandom().then((response) => {
-      //     toDataUrl(response.url).then(img => {
-      //       this.setState(prevState => ({
-      //         images: [...prevState.images, "data:image/png[jpg];base64," + img]
-      //       }));
-      //     });
-      //   });
-      // }, 10000);
-
-      // setTimeout(() => {
-      //   getRandom().then((response) => {
-      //     toDataUrl(response.url).then(img => {
-      //       this.setState(prevState => ({
-      //         images: [...prevState.images, "data:image/png[jpg];base64," + img]
-      //       }));
-      //     });
-      //   });
-      // }, 15000);
     }
   }
 
@@ -134,9 +97,7 @@ export default class App extends Component {
   render() {
     return (
       <div className="container">
-        <div className="app-header">
-          <h1>Image Editor</h1>
-        </div>
+
         <div className="columns">
           <div className="left-sidebar">
             <BackgroundContainer

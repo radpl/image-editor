@@ -8,7 +8,7 @@ import LogoElement from '../logo/LogoElement';
 import background from '../../assets/bgAssets';
 import TextElement from '../text/TextElement';
 import ResizeElement from '../logo/ResizeElement';
-
+import styles from './MainEditorArea.module.css';
 
 class MainEditorArea extends Component {
     constructor(props) {
@@ -98,7 +98,7 @@ class MainEditorArea extends Component {
     }
 
     downloadImage = () => {
-        let editorArea = document.querySelector('.mainArea');
+        let editorArea = document.querySelector('.download');
         var a = document.createElement('a');
         html2canvas(editorArea).then((canvas) => {
             a.href = canvas.toDataURL("image/jpeg").replace("image/jpeg", "image/octet-stream");
@@ -200,8 +200,8 @@ class MainEditorArea extends Component {
         }
 
         return connectDropTarget(
-            <div className="mainArea">
-                <div style={style}>
+            <div >
+                <div className={`${styles.mainArea} download`} style={style}>
                     {Object.keys(logos).map(key => {
                         const { left, top, width, height, render } = logos[key];
                         if (!render) return false;
