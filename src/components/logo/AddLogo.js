@@ -16,7 +16,7 @@ export default function AddLogo() {
             <ul className={styles.imageList}>
                 <li className={styles.element}><LogoElement id="1" image={logos.logo1} element={style} alt="image1" /></li>
                 <li className={styles.element} ><LogoElement id="2" image={logos.logo2} element={style} alt="image2" /></li>
-                <li className={styles.element} ><LogoElement id="3" image={logos.logo3} element={style} alt="image3" /></li>
+                <li className={styles.element} ><LogoElement id="3" image={logos.logo3} element={{ ...style, backgroundColor: "#aaa" }} alt="image3" /></li>
 
             </ul>
         </div>
