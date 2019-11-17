@@ -6,6 +6,7 @@ import ItemTypes from '../dnd/ItemTypes';
 import SimpleButton from '../common/SimpleButton';
 import LogoElement from '../logo/LogoElement';
 import background from '../../assets/bgAssets';
+import logoImages from '../../assets/logoAssets';
 import TextElement from '../text/TextElement';
 import ResizeElement from '../logo/ResizeElement';
 import styles from './MainEditorArea.module.css';
@@ -214,7 +215,7 @@ class MainEditorArea extends Component {
                                 width={width}
                                 height={height}
                                 hideSourceOnDrag="true"
-                                image={background["bg" + key]}
+                                image={logoImages["logo" + key]}
                                 element={{ ...imageStyle, left, top, width: width + "px", height: height + "px" }}
                                 handleClick={this.handleClick}
                             />
@@ -253,7 +254,7 @@ class MainEditorArea extends Component {
                             left: this.state.text.left,
                         }}
                         handleClick={this.handleTextClick}
-                    >{this.state.text.value}</TextElement>
+                    >{this.props.renderText.value}</TextElement>
                     }
                     {this.props.renderText.status && this.state.text.clicked && (<button id={this.state.text.id}
                         style={{ ...buttonStyle, left: this.state.text.left, top: (+this.state.text.top + this.props.renderText.height + 5) }}
