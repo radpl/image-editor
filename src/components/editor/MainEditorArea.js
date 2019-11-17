@@ -183,7 +183,7 @@ class MainEditorArea extends Component {
 
         return connectDropTarget(
             <div >
-                <div className={`${styles.mainArea} download`} style={style} onMouseOver={(e) => console.log('main mouse over')}>
+                <div className={`${styles.mainArea} download`} style={style}>
                     {Object.keys(logos).map(key => {
                         const { left, top, width, height, render } = logos[key];
                         if (!render) return false;
