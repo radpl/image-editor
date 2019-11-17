@@ -5,7 +5,7 @@ import html2canvas from 'html2canvas';
 import ItemTypes from '../dnd/ItemTypes';
 import SimpleButton from '../common/SimpleButton';
 import LogoElement from '../logo/LogoElement';
-import background from '../../assets/bgAssets';
+//import background from '../../assets/bgAssets';
 import logoImages from '../../assets/logoAssets';
 import TextElement from '../text/TextElement';
 import ResizeElement from '../logo/ResizeElement';
@@ -188,7 +188,7 @@ class MainEditorArea extends Component {
             maxHeight: "100px",
             fontFamily: `${this.props.renderText.font}`,
             fontSize: "20px",
-            color: "black"
+            color: `${this.props.renderText.color}`
 
         }
 

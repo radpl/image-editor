@@ -39,8 +39,8 @@ export default class App extends Component {
     })
   }
 
-  handleAddText(status, initial, value, font) {
-    const temp = { ...this.state.renderText, status, value, font };
+  handleAddText(status, initial, value, font, color) {
+    const temp = { ...this.state.renderText, status, value, font, color };
     this.setState({
       renderText: temp
     })
