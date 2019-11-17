@@ -17,7 +17,6 @@ export default function AddText(props) {
     }
 
     const handleFont = (event) => {
-        //event.preventDefault();
         const { value } = event.target;
         var mapping = {
             Arial: "Arial",

@@ -23,7 +23,6 @@ class MainEditorArea extends Component {
     }
 
     moveLogo(id, left, top, width, height) {
-        //refarctor to use prevstate
         const temp = Object.assign({}, this.state.logos);
         temp[id] = { left, top, width, height, clicked: false, render: true };
         this.setState({
@@ -34,7 +33,6 @@ class MainEditorArea extends Component {
     resizeLogo(id, deltaLeft, deltaTop, width, height) {
 
         let widthChg = width + deltaLeft;
-        //const heightChg = height + deltaTop;
         if (widthChg > 150) widthChg = 150;
         if (widthChg < 30) widthChg = 30;
         const temp = Object.assign({}, this.state.logos);
@@ -75,7 +73,6 @@ class MainEditorArea extends Component {
     }
 
     handleTextClick(event) {
-        //const element = event.target;    
         const el = Object.assign({}, this.state.text);
         el.clicked = !el.clicked;
 
@@ -110,7 +107,6 @@ class MainEditorArea extends Component {
             const el = document.getElementById("t1");
             const width = el.offsetWidth;
             const height = el.offsetHeight;
-            console.log(width, height);
             if (this.state.text.initial) {
                 const obj = Object.assign({}, this.state.text,
                     {
@@ -143,7 +139,6 @@ class MainEditorArea extends Component {
 
     render() {
         const { isOver, canDrop, connectDropTarget } = this.props;
-        console.log(isOver, canDrop);
         const { logos } = this.state;
 
         const style = {

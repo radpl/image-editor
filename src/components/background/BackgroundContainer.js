@@ -7,7 +7,6 @@ import InputText from '../common/InputText';
 export default function BackgroundContainer(props) {
     const [inputValue, setInput] = useState("");
 
-
     const handleChange = (event) => {
         const { value } = event.target;
         setInput(value);

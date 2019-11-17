@@ -54,7 +54,6 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    //refactor
     if (this.state.images.length === 0) {
       this.getRandomImages(4);
     }
@@ -63,7 +62,6 @@ export default class App extends Component {
   getRandomImages(number) {
     for (let i = 0; i < number; i++) {
       setTimeout(() => {
-        console.log('fetch image');
         getRandom().then((response) => {
           toDataUrl(response.url).then(img => {
             this.setState(prevState => ({
@@ -79,7 +77,6 @@ export default class App extends Component {
   getSearchedImages(number, serachTerm) {
     for (let i = 0; i < number; i++) {
       setTimeout(() => {
-        console.log('fetch image');
         searchImages(serachTerm).then((response) => {
           toDataUrl(response.url).then(img => {
             this.setState(prevState => ({
@@ -91,8 +88,6 @@ export default class App extends Component {
 
     }
   }
-
-
 
   render() {
     return (

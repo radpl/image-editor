@@ -11,7 +11,6 @@ class ColorPicker extends Component {
 
     }
 
-
     render() {
         return (<div className={styles.pickerMain}><CompactPicker width="200px"
             color={this.props.color}

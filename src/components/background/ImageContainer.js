@@ -2,8 +2,6 @@ import React from 'react'
 import SimpleHeader from '../common/SimpleHeader';
 import Thumbnail from '../common/Thumbnail';
 import styles from './container.module.css';
-//import background from '../../assets/bgAssets';
-
 
 export default function ImageContainer(props) {
     return (
