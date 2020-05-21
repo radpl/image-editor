@@ -5,7 +5,7 @@ import AddText from '../text/AddText';
 export default function LogoContainer(props) {
     return (
         <div>
-            <AddLogo />
+            <AddLogo logos={props.logos} />
             <AddText handleAddText={props.handleAddText} />
         </div>
     )

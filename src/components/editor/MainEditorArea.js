@@ -4,7 +4,7 @@ import html2canvas from 'html2canvas';
 import ItemTypes from '../dnd/ItemTypes';
 import SimpleButton from '../common/SimpleButton';
 import LogoElement from '../logo/LogoElement';
-import logoImages from '../../assets/logoAssets';
+//import logoImages from '../../assets/logoAssets';
 import TextElement from '../text/TextElement';
 import ResizeElement from '../logo/ResizeElement';
 import styles from './MainEditorArea.module.css';
@@ -33,8 +33,8 @@ class MainEditorArea extends Component {
     resizeLogo(id, deltaLeft, deltaTop, width, height) {
 
         let widthChg = width + deltaLeft;
-        if (widthChg > 150) widthChg = 150;
-        if (widthChg < 30) widthChg = 30;
+        //if (widthChg > 150) widthChg = 150;
+        //if (widthChg < 30) widthChg = 30;
         const temp = Object.assign({}, this.state.logos);
         temp[id] = { left: temp[id].left, top: temp[id].top, width: widthChg, height: widthChg, clicked: false, render: true };
 
@@ -140,6 +140,8 @@ class MainEditorArea extends Component {
     render() {
         const { isOver, canDrop, connectDropTarget } = this.props;
         const { logos } = this.state;
+        const logoImages = this.props.logoImages;
+
 
         const style = {
             width: "400px",
@@ -199,7 +201,7 @@ class MainEditorArea extends Component {
                                     width={width}
                                     height={height}
                                     hideSourceOnDrag="true"
-                                    image={logoImages["logo" + key]}
+                                    image={logoImages[+key - 1]}
                                     element={{ ...imageStyle, left, top, width: width + "px", height: height + "px" }}
                                     handleClick={this.handleClick}
                                 />

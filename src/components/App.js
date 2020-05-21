@@ -4,7 +4,7 @@ import ImageEditor from './editor/ImageEditor';
 import BackgroundContainer from './background/BackgroundContainer';
 import LogoContainer from './logo/LogoContainer';
 import background from '../assets/bgAssets';
-import { getRandom, toDataUrl, searchImages } from '../api/sourceApi';
+import { getRandom, getRandomLogos, toDataUrl, searchImages } from '../api/sourceApi';
 
 export default class App extends Component {
   constructor() {
@@ -13,6 +13,7 @@ export default class App extends Component {
     this.state = {
       background: background.empty,
       images: [],
+      logos: [],
       renderText: { status: false, initial: true, value: "", font: "" }
     }
 
@@ -56,6 +57,7 @@ export default class App extends Component {
   componentDidMount() {
     if (this.state.images.length === 0) {
       this.getRandomImages(4);
+      this.getRandomLogos(3);
     }
   }
 
@@ -66,6 +68,20 @@ export default class App extends Component {
           toDataUrl(response.url).then(img => {
             this.setState(prevState => ({
               images: [...prevState.images, "data:image/png[jpg];base64," + img]
+            }));
+          });
+        });
+      }, 4000 * i)
+
+    }
+  }
+  getRandomLogos(number) {
+    for (let i = 0; i < number; i++) {
+      setTimeout(() => {
+        getRandomLogos().then((response) => {
+          toDataUrl(response.url).then(img => {
+            this.setState(prevState => ({
+              logos: [...prevState.logos, "data:image/png[jpg];base64," + img]
             }));
           });
         });
@@ -110,10 +126,11 @@ export default class App extends Component {
               handleAddText={this.handleAddText}
               backgroundImages={this.state.images}
               setInitialPosition={this.setInitialPosition}
+              logoImages={this.state.logos}
             />
           </div>
           <div className="right-sidebar">
-            <LogoContainer handleAddText={this.handleAddText} />
+            <LogoContainer handleAddText={this.handleAddText} logos={this.state.logos} />
           </div>
         </div>
       </div>

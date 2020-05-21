@@ -12,6 +12,7 @@ export default function ImageEditor(props) {
                 renderText={props.renderText}
                 handleAddText={props.handleAddText}
                 setInitialPosition={props.setInitialPosition}
+                logoImages={props.logoImages}
             />
         </div>
     )

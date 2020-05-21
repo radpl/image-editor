@@ -1,9 +1,13 @@
 
 import image2base64 from 'image-to-base64'
 const baseUrl = "https://source.unsplash.com/random/400x400";
+const baseUrlLogos = "https://source.unsplash.com/random/100x100";
 
 export async function getRandom() {
     return await fetch(baseUrl);
+}
+export async function getRandomLogos() {
+    return await fetch(baseUrlLogos);
 }
 
 export async function searchImages(searchTerm) {
