@@ -14,6 +14,7 @@ export default class App extends Component {
       background: background.empty,
       images: [],
       logos: [],
+      addedTexts: {},
       renderText: { status: false, initial: true, value: "", font: "" }
     }
 
@@ -22,6 +23,10 @@ export default class App extends Component {
     this.handleAddText = this.handleAddText.bind(this);
     this.handleSearchImages = this.handleSearchImages.bind(this);
     this.setInitialPosition = this.setInitialPosition.bind(this);
+    this.handleTextMove = this.handleTextMove.bind(this);
+    this.mainHandleTextClick = this.mainHandleTextClick.bind(this);
+    this.mainHandleTextDelete = this.mainHandleTextDelete.bind(this);
+    this.handleFontSizeUpdate = this.handleFontSizeUpdate.bind(this);
   }
 
   handleSelectBg(image) {
@@ -40,11 +45,56 @@ export default class App extends Component {
     })
   }
 
-  handleAddText(status, initial, value, font, color) {
-    const temp = { ...this.state.renderText, status, value, font, color };
+  handleAddText(value, font, color, render = true) {
+    const tmp = Object.assign({}, this.state.addedTexts);
+    let id = Object.keys(tmp).length + 1;
+
+    tmp[id] = { left: 200, top: 120, clicked: false, render, value, font, color, fontSize: 20 };
     this.setState({
-      renderText: temp
-    })
+      addedTexts: { ...tmp }
+    });
+
+  }
+
+  handleFontSizeUpdate(id, change) {
+    const temp = Object.assign({}, this.state.addedTexts);
+    let fontSize = 20 + (-change);
+    if (fontSize < 5) fontSize = 5;
+    if (fontSize > 50) fontSize = 50;
+    temp[id] = { ...temp[id], fontSize };
+    this.setState({
+      addedTexts: { ...temp }
+    });
+  }
+
+  mainHandleTextDelete(id) {
+    const tmp = Object.assign({}, this.state.addedTexts);
+    const item = tmp[id];
+
+    tmp[id] = { ...item, clicked: false, render: false };
+    this.setState({
+      addedTexts: { ...tmp }
+    });
+
+  }
+
+  handleTextMove(id, left, top) {
+    const temp = Object.assign({}, this.state.addedTexts);
+    temp[id] = { ...temp[id], left, top };
+    this.setState({
+      addedTexts: { ...temp }
+    });
+  }
+
+  mainHandleTextClick(event) {
+    const element = event.target;
+    const temp = Object.assign({}, this.state.addedTexts);
+    const el = temp[element.id];
+    el.clicked = !el.clicked;
+
+    this.setState({
+      addedTexts: { ...temp }
+    });
   }
 
   handleSearchImages(searchTerm) {
@@ -127,10 +177,15 @@ export default class App extends Component {
               backgroundImages={this.state.images}
               setInitialPosition={this.setInitialPosition}
               logoImages={this.state.logos}
+              addedTexts={this.state.addedTexts}
+              handleTextMove={this.handleTextMove}
+              mainHandleTextClick={this.mainHandleTextClick}
+              mainHandleTextDelete={this.mainHandleTextDelete}
+              handleFontSizeUpdate={this.handleFontSizeUpdate}
             />
           </div>
           <div className="right-sidebar">
-            <LogoContainer handleAddText={this.handleAddText} logos={this.state.logos} />
+            <LogoContainer handleAddText={this.handleAddText} logos={this.state.logos} addedTexts={this.state.addedTexts} />
           </div>
         </div>
       </div>

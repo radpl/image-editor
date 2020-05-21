@@ -33,7 +33,7 @@ export default function AddText(props) {
 
     const addTextPosition = (event) => {
         event.preventDefault();
-        props.handleAddText(true, true, inputValue, fontFamily, fontColor);
+        props.handleAddText(inputValue, fontFamily, fontColor);
     }
 
     return (

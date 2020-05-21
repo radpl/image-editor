@@ -7,6 +7,7 @@ import LogoElement from '../logo/LogoElement';
 //import logoImages from '../../assets/logoAssets';
 import TextElement from '../text/TextElement';
 import ResizeElement from '../logo/ResizeElement';
+import ResizeText from '../text/ResizeText';
 import styles from './MainEditorArea.module.css';
 
 class MainEditorArea extends Component {
@@ -16,6 +17,7 @@ class MainEditorArea extends Component {
             logos: {},
             text: { id: "t1", top: 180, left: 120, clicked: false, value: "", font: "", initial: true }
         }
+
         this.handleClick = this.handleClick.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
         this.handleTextDelete = this.handleTextDelete.bind(this);
@@ -42,12 +44,20 @@ class MainEditorArea extends Component {
             logos: { ...temp }
         });
     }
+    resizeText(id, deltaLeft, deltaTop, width, height) {
 
+        let change = (deltaTop + deltaLeft) / 2;
+        this.props.handleFontSizeUpdate(id, change);
+
+    }
     moveText(id, left, top) {
-        const obj = Object.assign({}, this.state.text, { id, left, top });
-        this.setState({
-            text: obj
-        });
+        this.props.handleTextMove(id, left, top);
+        // const obj = Object.assign({}, this.state.text, { id, left, top });
+        // this.setState({
+        //     text: obj
+        // });
+
+
     }
 
     handleClick(event) {
@@ -73,23 +83,13 @@ class MainEditorArea extends Component {
     }
 
     handleTextClick(event) {
-        const el = Object.assign({}, this.state.text);
-        el.clicked = !el.clicked;
-
-        this.setState({
-            text: el
-        });
+        this.props.mainHandleTextClick(event)
     }
 
-    handleTextDelete() {
-        this.props.handleAddText(false, false, this.props.renderText.value, this.props.renderText.font);
+    handleTextDelete(event) {
+        const element = event.target;
+        this.props.mainHandleTextDelete(element.id);
 
-        const el = Object.assign({}, this.state.text);
-        el.clicked = false;
-
-        this.setState({
-            text: el
-        });
     }
 
     downloadImage = () => {
@@ -102,45 +102,46 @@ class MainEditorArea extends Component {
         });
     }
 
-    componentDidUpdate() {
-        if (this.props.renderText.initial && this.props.renderText.status) {
-            const el = document.getElementById("t1");
-            const width = el.offsetWidth;
-            const height = el.offsetHeight;
-            if (this.state.text.initial) {
-                const obj = Object.assign({}, this.state.text,
-                    {
-                        value: this.props.renderText.value,
-                        font: this.props.renderText.font
-                    });
+    // componentDidUpdate() {
+    //     if (this.props.renderText.initial && this.props.renderText.status) {
+    //         const el = document.getElementById("t1");
+    //         //const width = el.offsetWidth;
+    //         //const height = el.offsetHeight;
+    //         if (this.state.text.initial) {
+    //             const obj = Object.assign({}, this.state.text,
+    //                 {
+    //                     value: this.props.renderText.value,
+    //                     font: this.props.renderText.font
+    //                 });
 
-                this.setState({
-                    text: obj
-                });
-            }
-            if (this.state.text.initial && width > 2) {
-                const el = Object.assign({}, this.state.text,
-                    {
-                        top: (200 - (height / 2)),
-                        left: (200 - (width / 2)),
-                        value: this.props.renderText.value,
-                        font: this.props.renderText.font,
-                        initial: false,
-                        width,
-                        height
-                    });
+    //             this.setState({
+    //                 text: obj
+    //             });
+    //         }
+    //         // if (this.state.text.initial && width > 2) {
+    //         //     const el = Object.assign({}, this.state.text,
+    //         //         {
+    //         //             top: (200 - (height / 2)),
+    //         //             left: (200 - (width / 2)),
+    //         //             value: this.props.renderText.value,
+    //         //             font: this.props.renderText.font,
+    //         //             initial: false,
+    //         //             width,
+    //         //             height
+    //         //         });
 
-                this.setState({
-                    text: el
-                });
-            }
-        }
-    }
+    //         //     this.setState({
+    //         //         text: el
+    //         //     });
+    //         // }
+    //     }
+    // }
 
     render() {
         const { isOver, canDrop, connectDropTarget } = this.props;
         const { logos } = this.state;
         const logoImages = this.props.logoImages;
+        const addedTexts = this.props.addedTexts;
 
 
         const style = {
@@ -170,9 +171,9 @@ class MainEditorArea extends Component {
             position: "absolute",
             maxWidth: "250px",
             maxHeight: "100px",
-            fontFamily: `${this.props.renderText.font}`,
+            //fontFamily: `${this.props.renderText.font}`,
             fontSize: "20px",
-            color: `${this.props.renderText.color}`,
+            //color: `${this.props.renderText.color}`,
         }
 
         const resizeStyle = {
@@ -194,25 +195,12 @@ class MainEditorArea extends Component {
                         return (
                             <>
                                 <LogoElement
-                                    key={key}
-                                    id={key}
-                                    left={left}
-                                    top={top}
-                                    width={width}
-                                    height={height}
-                                    hideSourceOnDrag="true"
+                                    key={key} id={key} left={left} top={top} width={width} height={height} hideSourceOnDrag="true"
                                     image={logoImages[+key - 1]}
                                     element={{ ...imageStyle, left, top, width: width + "px", height: height + "px" }}
                                     handleClick={this.handleClick}
                                 />
-                                <ResizeElement
-                                    id={key}
-                                    width={width}
-                                    height={height}
-                                    left={left - 9}
-                                    top={top - 9}
-                                    resizeStyle={{ ...resizeStyle, left: elleft, top: eltop }}
-                                />
+                                <ResizeElement id={key} width={width} height={height} left={left - 9} top={top - 9} resizeStyle={{ ...resizeStyle, left: elleft, top: eltop }} />
                             </>
                         )
                     })}
@@ -220,34 +208,33 @@ class MainEditorArea extends Component {
                         const { left, top, height, width, clicked, render } = logos[key];
                         if (!render) return false;
                         return (
-                            clicked && <button id={key}
-                                style={{ ...buttonStyle, left, top: (+top + height + 10), width }}
-                                onClick={this.handleDelete}
-                            >Delete</button>
+                            clicked && <button id={key} style={{ ...buttonStyle, left, top: (+top + height + 10), width }}
+                                onClick={this.handleDelete}>Delete</button>
                         )
                     })}
-                    {this.props.renderText.status && <TextElement
-                        id={this.state.text.id}
-                        top={this.state.text.top}
-                        left={this.state.text.left}
-                        textStyle={{
-                            ...textStyle,
-                            top: this.state.text.top,
-                            left: this.state.text.left,
-                        }}
-                        handleClick={this.handleTextClick}
-                    >{this.props.renderText.value}</TextElement>
-                    }
-                    {this.props.renderText.status && this.state.text.clicked &&
-                        (<button id={this.state.text.id}
-                            style={{
-                                ...buttonStyle,
-                                left: this.state.text.left,
-                                top: (+this.state.text.top + this.state.text.height),
-                                width: this.state.text.width
-                            }}
-                            onClick={this.handleTextDelete}
-                        >Delete</button>)}
+                    {Object.keys(addedTexts).map(key => {
+                        const { left, top, value, render, font, color, fontSize } = addedTexts[key];
+                        if (!render) return false;
+                        const elleft = left - 9 + 30;
+                        const eltop = top - 9 + 20;
+                        return (
+                            <>
+                                <TextElement id={key} top={top} left={left} textStyle={{ ...textStyle, top: top, left: left, fontFamily: font, color, fontSize: fontSize + "px" }}
+                                    handleClick={this.handleTextClick}
+                                >{value}</TextElement>
+                                <ResizeText id={key} width={20} height={20} left={left + 9} top={top + 9} resizeStyle={{ ...resizeStyle, left, top }} />
+
+                            </>
+                        )
+                    })}
+                    {Object.keys(addedTexts).map(key => {
+                        const { left, top, clicked, render } = addedTexts[key];
+                        if (!render) return false;
+                        return (
+                            clicked && <button id={key} style={{ ...buttonStyle, left, top: (+top + 25) }}
+                                onClick={this.handleTextDelete}>Delete</button>
+                        )
+                    })}
                 </div>
 
                 <SimpleButton handleClick={this.downloadImage}>Download as image</SimpleButton>
@@ -285,6 +272,14 @@ export default DropTarget(ItemTypes,
                 //const top = Math.round((item.top - item.height) + delta.y);
                 component.resizeLogo(item.id, deltaLeft, deltaTop, item.width, item.height);
             }
+
+            if (item.type === ItemTypes[3]) {
+                const deltaLeft = delta.x;
+                const deltaTop = delta.y;
+                //const left = Math.round((item.left - item.width) + delta.x);
+                //const top = Math.round((item.top - item.height) + delta.y);
+                component.resizeText(item.id, deltaLeft, deltaTop, item.width, item.height);
+            }
         },
         hover(props, monitor, component) {
             if (!component) {
@@ -296,6 +291,13 @@ export default DropTarget(ItemTypes,
                 const deltaLeft = delta.x;
                 const deltaTop = delta.y;
                 component.resizeLogo(item.id, deltaLeft, deltaTop, item.width, item.height);
+            }
+            if (item.type === ItemTypes[3]) {
+                const deltaLeft = delta.x;
+                const deltaTop = delta.y;
+                //const left = Math.round((item.left - item.width) + delta.x);
+                //const top = Math.round((item.top - item.height) + delta.y);
+                component.resizeText(item.id, deltaLeft, deltaTop, item.width, item.height);
             }
         },
 

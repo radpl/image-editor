@@ -1,5 +1,6 @@
 export default [
     "logo",
     'text',
-    'resize'
+    'resize',
+    'textresize',
 ];
