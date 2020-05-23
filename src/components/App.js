@@ -1,121 +1,23 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Route } from 'react-router-dom';
 import './App.css';
-import ImageEditor from './editor/ImageEditor';
-import BackgroundContainer from './background/BackgroundContainer';
-import LogoContainer from './logo/LogoContainer';
-import background from '../assets/bgAssets';
-import { getRandom, getRandomLogos, toDataUrl, searchImages } from '../api/sourceApi';
+import NavBar from "./login/NavBar";
+import { useAuth0 } from "../react-auth0-spa";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import MainEditor from './MainEditor';
+import Profile from './login/Profile';
 
-export default class App extends Component {
-  constructor() {
-    super()
+export default function App(props) {
 
-    this.state = {
-      background: background.empty,
-      images: [],
-      logos: [],
-      addedTexts: {},
-      renderText: { status: false, initial: true, value: "", font: "" }
-    }
+  const { loading } = useAuth0();
 
-    this.handleSelectBg = this.handleSelectBg.bind(this);
-    this.handleDeleteBg = this.handleDeleteBg.bind(this);
-    this.handleSearchImages = this.handleSearchImages.bind(this);
-  }
-
-  handleSelectBg(image) {
-    this.setState({ background: image });
-
-  }
-
-  handleDeleteBg(image) {
-    this.setState({ background: background.empty })
-  }
-
-  handleSearchImages(searchTerm) {
-    this.setState({
-      images: []
-    })
-    this.getSearchedImages(4, searchTerm);
-  }
-
-  componentDidMount() {
-    if (this.state.images.length === 0) {
-      this.getRandomImages(4);
-      this.getRandomLogos(3);
-    }
-  }
-
-  getRandomImages(number) {
-    for (let i = 0; i < number; i++) {
-      setTimeout(() => {
-        getRandom().then((response) => {
-          toDataUrl(response.url).then(img => {
-            this.setState(prevState => ({
-              images: [...prevState.images, "data:image/png[jpg];base64," + img]
-            }));
-          });
-        });
-      }, 4000 * i)
-
-    }
-  }
-  getRandomLogos(number) {
-    for (let i = 0; i < number; i++) {
-      setTimeout(() => {
-        getRandomLogos().then((response) => {
-          toDataUrl(response.url).then(img => {
-            this.setState(prevState => ({
-              logos: [...prevState.logos, "data:image/png[jpg];base64," + img]
-            }));
-          });
-        });
-      }, 4000 * i)
-
-    }
-  }
-
-  getSearchedImages(number, serachTerm) {
-    for (let i = 0; i < number; i++) {
-      setTimeout(() => {
-        searchImages(serachTerm).then((response) => {
-          toDataUrl(response.url).then(img => {
-            this.setState(prevState => ({
-              images: [...prevState.images, "data:image/png[jpg];base64," + img]
-            }));
-          });
-        });
-      }, 4000 * i)
-
-    }
-  }
-
-  render() {
-    return (
-      <div className="container">
-
-        <div className="columns">
-          <div className="left-sidebar">
-            <BackgroundContainer
-              handleSelectBg={this.handleSelectBg}
-              handleDeleteBg={this.handleDeleteBg}
-              handleSearchImages={this.handleSearchImages}
-              backgroundImages={this.state.images}
-            />
-          </div>
-          <div className="main-panel">
-            <ImageEditor
-              selectedBackground={this.state.background}
-              backgroundImages={this.state.images}
-              logoImages={this.state.logos}
-            />
-          </div>
-          <div className="right-sidebar">
-            <LogoContainer logos={this.state.logos} />
-          </div>
-        </div>
-      </div>
-    );
-  }
+  return (
+    <div className="container">
+      <NavBar />
+      <Route exact path='/' component={MainEditor} />
+      <Route path='/profile' component={Profile} />
+    </div>
+  );
 }
 

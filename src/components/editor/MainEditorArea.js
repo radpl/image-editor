@@ -4,7 +4,6 @@ import html2canvas from 'html2canvas';
 import ItemTypes from '../dnd/ItemTypes';
 import SimpleButton from '../common/SimpleButton';
 import LogoElement from '../logo/LogoElement';
-//import logoImages from '../../assets/logoAssets';
 import TextElement from '../text/TextElement';
 import ResizeElement from '../logo/ResizeElement';
 import ResizeText from '../text/ResizeText';
@@ -145,8 +144,8 @@ class MainEditorArea extends Component {
                     {Object.keys(addedTexts).map(key => {
                         const { left, top, value, render, font, color, fontSize, clicked } = addedTexts[key];
                         if (!render) return false;
-                        const elleft = left - 9 + 30;
-                        const eltop = top - 9 + 20;
+                        //const elleft = left - 9 + 30;
+                        //const eltop = top - 9 + 20;
                         return (
                             <>
                                 <TextElement id={key} top={top} left={left} textStyle={{ ...textStyle, top: top, left: left, fontFamily: font, color, fontSize: fontSize + "px" }}
@@ -180,7 +179,7 @@ const mapDispatchToProps = {
     deleteText,
 };
 
-const dragService = DropTarget(ItemTypes,
+const dropService = DropTarget(ItemTypes,
     {
         drop(props, monitor, component) {
             if (!component) {
@@ -193,7 +192,8 @@ const dragService = DropTarget(ItemTypes,
                     const left = Math.round(item.left + delta.x);
                     const top = Math.round(item.top + delta.y);
                     component.moveLogo(item.id, left, top, item.width, item.height, item.mouseOver);
-                } else {
+                }
+                else {
                     component.moveLogo(item.id, 100, 100, 100, 100);
                 }
             }
@@ -240,4 +240,4 @@ const dragService = DropTarget(ItemTypes,
         canDrop: monitor.canDrop(),
     })
 )(MainEditorArea);
-export default connect(mapStateToProps, mapDispatchToProps)(dragService);
+export default connect(mapStateToProps, mapDispatchToProps)(dropService);
