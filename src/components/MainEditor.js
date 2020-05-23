@@ -5,8 +5,7 @@ import BackgroundContainer from './background/BackgroundContainer';
 import LogoContainer from './logo/LogoContainer';
 import background from '../assets/bgAssets';
 import { getRandom, getRandomLogos, toDataUrl, searchImages } from '../api/sourceApi';
-import NavBar from "./login/NavBar";
-import { useAuth0 } from "../react-auth0-spa";
+
 
 export default function MainEditor(props) {
 
@@ -27,10 +26,11 @@ export default function MainEditor(props) {
     getSearchedImages(4, searchTerm);
   }
 
-
   useEffect(() => {
     if (images.length === 0) {
       getRandomImages(4);
+    }
+    if (logos.length === 0) {
       getRandomLogosFetch(3);
     }
   }, [])

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useAuth0 } from "../../react-auth0-spa";
 import { Link, withRouter } from 'react-router-dom';
 import styles from './navbar.module.css';
