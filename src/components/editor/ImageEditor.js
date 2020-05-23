@@ -9,15 +9,7 @@ export default function ImageEditor(props) {
             <SimpleHeader size="medium">Simple Editor</SimpleHeader>
             <MainEditorArea
                 selectedBackground={props.selectedBackground}
-                renderText={props.renderText}
-                handleAddText={props.handleAddText}
-                setInitialPosition={props.setInitialPosition}
                 logoImages={props.logoImages}
-                addedTexts={props.addedTexts}
-                handleTextMove={props.handleTextMove}
-                mainHandleTextClick={props.mainHandleTextClick}
-                mainHandleTextDelete={props.mainHandleTextDelete}
-                handleFontSizeUpdate={props.handleFontSizeUpdate}
             />
         </div>
     )

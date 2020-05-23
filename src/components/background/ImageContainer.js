@@ -8,10 +8,10 @@ export default function ImageContainer(props) {
         <>
             <SimpleHeader size="smallCenter">Select background</SimpleHeader>
             <ul className={styles.imageList}>
-                <li><Thumbnail image={props.backgroundImages[0]} width="35%" height="35%" handleClick={props.handleSelectBg} /></li>
-                <li><Thumbnail image={props.backgroundImages[1]} width="35%" height="35%" handleClick={props.handleSelectBg} /></li>
-                <li><Thumbnail image={props.backgroundImages[2]} width="35%" height="35%" handleClick={props.handleSelectBg} /></li>
-                <li><Thumbnail image={props.backgroundImages[3]} width="35%" height="35%" handleClick={props.handleSelectBg} /></li>
+                {props.backgroundImages.map((item, index) => {
+                    //const id = index + 1;
+                    return <li><Thumbnail image={item} width="35%" height="35%" handleClick={props.handleSelectBg} /></li>
+                })}
             </ul>
         </>
     )
