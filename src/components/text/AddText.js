@@ -4,8 +4,9 @@ import InputField from '../common/InputField';
 import RadioButtons from './RadioButtons';
 import SimpleButton from '../common/SimpleButton';
 import ColorPicker from './ColorPicker';
-
-export default function AddText(props) {
+import { connect } from 'react-redux';
+import { addText } from "../../redux/actions/textActions"
+function AddText(props) {
 
     const [inputValue, setInput] = useState("Example text");
     const [fontFamily, setFont] = useState("Times New Roman");
@@ -33,7 +34,8 @@ export default function AddText(props) {
 
     const addTextPosition = (event) => {
         event.preventDefault();
-        props.handleAddText(inputValue, fontFamily, fontColor);
+        const id = Object.keys(props.texts).length + 1;
+        props.addText({ id, left: 200, top: 120, clicked: false, render: true, value: inputValue, font: fontFamily, color: fontColor, fontSize: 20 });
     }
 
     return (
@@ -46,3 +48,14 @@ export default function AddText(props) {
         </div>
     )
 }
+
+function mapStateToProps(state, ownProps) {
+    return {
+        texts: state.texts
+    };
+}
+
+const mapDispatchToProps = {
+    addText,
+};
+export default connect(mapStateToProps, mapDispatchToProps)(AddText)

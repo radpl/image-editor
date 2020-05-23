@@ -6,7 +6,7 @@ export default function LogoContainer(props) {
     return (
         <div>
             <AddLogo logos={props.logos} />
-            <AddText handleAddText={props.handleAddText} addedTexts={props.addedTexts} />
+            <AddText />
         </div>
     )
 }

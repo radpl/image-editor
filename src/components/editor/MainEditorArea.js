@@ -9,87 +9,60 @@ import TextElement from '../text/TextElement';
 import ResizeElement from '../logo/ResizeElement';
 import ResizeText from '../text/ResizeText';
 import styles from './MainEditorArea.module.css';
+import { connect } from "react-redux";
+import { addLogo, deleteLogo } from "../../redux/actions/logoActions";
+import { addText, deleteText } from "../../redux/actions/textActions";
 
 class MainEditorArea extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            logos: {},
-            text: { id: "t1", top: 180, left: 120, clicked: false, value: "", font: "", initial: true }
-        }
-
-        this.handleClick = this.handleClick.bind(this);
-        this.handleDelete = this.handleDelete.bind(this);
-        this.handleTextDelete = this.handleTextDelete.bind(this);
-        this.handleTextClick = this.handleTextClick.bind(this);
-    }
 
     moveLogo(id, left, top, width, height) {
-        const temp = Object.assign({}, this.state.logos);
-        temp[id] = { left, top, width, height, clicked: false, render: true };
-        this.setState({
-            logos: { ...temp }
-        });
+        this.props.addLogo({ id, left, top, width, height, clicked: false, render: true });
     }
 
     resizeLogo(id, deltaLeft, deltaTop, width, height) {
-
         let widthChg = width + deltaLeft;
-        //if (widthChg > 150) widthChg = 150;
-        //if (widthChg < 30) widthChg = 30;
-        const temp = Object.assign({}, this.state.logos);
-        temp[id] = { left: temp[id].left, top: temp[id].top, width: widthChg, height: widthChg, clicked: false, render: true };
-
-        this.setState({
-            logos: { ...temp }
-        });
+        this.props.addLogo({ ...this.props.logos[id], width: widthChg, height: widthChg });
     }
+
     resizeText(id, deltaLeft, deltaTop, width, height) {
-
         let change = (deltaTop + deltaLeft) / 2;
-        this.props.handleFontSizeUpdate(id, change);
-
+        let fontSize = 20 + (-change);
+        if (fontSize < 5) fontSize = 5;
+        if (fontSize > 50) fontSize = 50;
+        this.props.addText({ ...this.props.texts[id], fontSize });
     }
+
     moveText(id, left, top) {
-        this.props.handleTextMove(id, left, top);
-        // const obj = Object.assign({}, this.state.text, { id, left, top });
-        // this.setState({
-        //     text: obj
-        // });
-
-
+        const text = this.props.texts[id];
+        this.props.addText({ ...text, left, top });
     }
 
-    handleClick(event) {
+    handleLogoClick = (event) => {
         const element = event.target;
-        const temp = Object.assign({}, this.state.logos);
-        const el = temp[element.id];
-        el.clicked = !el.clicked;
-
-        this.setState({
-            logos: { ...temp }
-        });
+        const logo = this.props.logos[element.id];
+        const clicked = !logo.clicked;
+        this.props.addLogo({ ...logo, clicked: clicked });
     }
 
-    handleDelete(event) {
+    handleLogoDelete = (event) => {
         const element = event.target;
-        const temp = Object.assign({}, this.state.logos);
-        const el = temp[element.id];
-        el.render = !el.render;
-
-        this.setState({
-            logos: { ...temp }
-        });
+        const logo = this.props.logos[element.id];
+        const render = !logo.render;
+        this.props.addLogo({ ...logo, render: render });
     }
 
-    handleTextClick(event) {
-        this.props.mainHandleTextClick(event)
-    }
-
-    handleTextDelete(event) {
+    handleTextClick = (event) => {
         const element = event.target;
-        this.props.mainHandleTextDelete(element.id);
+        const text = this.props.texts[element.id];
+        const clicked = !text.clicked;
+        this.props.addText({ ...text, clicked: clicked });
+    }
 
+    handleTextDelete = (event) => {
+        const element = event.target;
+        const text = this.props.texts[element.id];
+        const render = !text.render;
+        this.props.addText({ ...text, render: render });
     }
 
     downloadImage = () => {
@@ -102,46 +75,11 @@ class MainEditorArea extends Component {
         });
     }
 
-    // componentDidUpdate() {
-    //     if (this.props.renderText.initial && this.props.renderText.status) {
-    //         const el = document.getElementById("t1");
-    //         //const width = el.offsetWidth;
-    //         //const height = el.offsetHeight;
-    //         if (this.state.text.initial) {
-    //             const obj = Object.assign({}, this.state.text,
-    //                 {
-    //                     value: this.props.renderText.value,
-    //                     font: this.props.renderText.font
-    //                 });
-
-    //             this.setState({
-    //                 text: obj
-    //             });
-    //         }
-    //         // if (this.state.text.initial && width > 2) {
-    //         //     const el = Object.assign({}, this.state.text,
-    //         //         {
-    //         //             top: (200 - (height / 2)),
-    //         //             left: (200 - (width / 2)),
-    //         //             value: this.props.renderText.value,
-    //         //             font: this.props.renderText.font,
-    //         //             initial: false,
-    //         //             width,
-    //         //             height
-    //         //         });
-
-    //         //     this.setState({
-    //         //         text: el
-    //         //     });
-    //         // }
-    //     }
-    // }
-
     render() {
         const { isOver, canDrop, connectDropTarget } = this.props;
-        const { logos } = this.state;
+        const { logos } = this.props;
         const logoImages = this.props.logoImages;
-        const addedTexts = this.props.addedTexts;
+        const addedTexts = this.props.texts;
 
 
         const style = {
@@ -171,15 +109,13 @@ class MainEditorArea extends Component {
             position: "absolute",
             maxWidth: "250px",
             maxHeight: "100px",
-            //fontFamily: `${this.props.renderText.font}`,
             fontSize: "20px",
-            //color: `${this.props.renderText.color}`,
         }
 
         const resizeStyle = {
             width: "12px",
             height: "12px",
-            backgroundColor: this.props.renderText.color ? `${this.props.renderText.color}` : 'black',
+            backgroundColor: 'black',
             position: "absolute",
             cursor: "pointer"
         }
@@ -188,7 +124,7 @@ class MainEditorArea extends Component {
             <div >
                 <div className={`${styles.mainArea} download`} style={style}>
                     {Object.keys(logos).map(key => {
-                        const { left, top, width, height, render } = logos[key];
+                        const { left, top, width, height, render, clicked } = logos[key];
                         if (!render) return false;
                         const elleft = left - 9 + width;
                         const eltop = top - 9 + height;
@@ -198,22 +134,16 @@ class MainEditorArea extends Component {
                                     key={key} id={key} left={left} top={top} width={width} height={height} hideSourceOnDrag="true"
                                     image={logoImages[+key - 1]}
                                     element={{ ...imageStyle, left, top, width: width + "px", height: height + "px" }}
-                                    handleClick={this.handleClick}
+                                    handleClick={this.handleLogoClick}
                                 />
                                 <ResizeElement id={key} width={width} height={height} left={left - 9} top={top - 9} resizeStyle={{ ...resizeStyle, left: elleft, top: eltop }} />
+                                {clicked && <button id={key} style={{ ...buttonStyle, left, top: (+top + height + 10), width }}
+                                    onClick={this.handleLogoDelete}>Delete</button>}
                             </>
                         )
                     })}
-                    {Object.keys(logos).map(key => {
-                        const { left, top, height, width, clicked, render } = logos[key];
-                        if (!render) return false;
-                        return (
-                            clicked && <button id={key} style={{ ...buttonStyle, left, top: (+top + height + 10), width }}
-                                onClick={this.handleDelete}>Delete</button>
-                        )
-                    })}
                     {Object.keys(addedTexts).map(key => {
-                        const { left, top, value, render, font, color, fontSize } = addedTexts[key];
+                        const { left, top, value, render, font, color, fontSize, clicked } = addedTexts[key];
                         if (!render) return false;
                         const elleft = left - 9 + 30;
                         const eltop = top - 9 + 20;
@@ -223,16 +153,9 @@ class MainEditorArea extends Component {
                                     handleClick={this.handleTextClick}
                                 >{value}</TextElement>
                                 <ResizeText id={key} width={20} height={20} left={left + 9} top={top + 9} resizeStyle={{ ...resizeStyle, left, top }} />
-
+                                {clicked && <button id={key} style={{ ...buttonStyle, left, top: (+top + 25) }}
+                                    onClick={this.handleTextDelete}>Delete</button>}
                             </>
-                        )
-                    })}
-                    {Object.keys(addedTexts).map(key => {
-                        const { left, top, clicked, render } = addedTexts[key];
-                        if (!render) return false;
-                        return (
-                            clicked && <button id={key} style={{ ...buttonStyle, left, top: (+top + 25) }}
-                                onClick={this.handleTextDelete}>Delete</button>
                         )
                     })}
                 </div>
@@ -242,7 +165,22 @@ class MainEditorArea extends Component {
         );
     }
 }
-export default DropTarget(ItemTypes,
+
+function mapStateToProps(state, ownProps) {
+    return {
+        logos: state.logos,
+        texts: state.texts
+    };
+}
+
+const mapDispatchToProps = {
+    addLogo,
+    deleteLogo,
+    addText,
+    deleteText,
+};
+
+const dragService = DropTarget(ItemTypes,
     {
         drop(props, monitor, component) {
             if (!component) {
@@ -268,16 +206,12 @@ export default DropTarget(ItemTypes,
             if (item.type === ItemTypes[2]) {
                 const deltaLeft = delta.x;
                 const deltaTop = delta.y;
-                //const left = Math.round((item.left - item.width) + delta.x);
-                //const top = Math.round((item.top - item.height) + delta.y);
                 component.resizeLogo(item.id, deltaLeft, deltaTop, item.width, item.height);
             }
 
             if (item.type === ItemTypes[3]) {
                 const deltaLeft = delta.x;
                 const deltaTop = delta.y;
-                //const left = Math.round((item.left - item.width) + delta.x);
-                //const top = Math.round((item.top - item.height) + delta.y);
                 component.resizeText(item.id, deltaLeft, deltaTop, item.width, item.height);
             }
         },
@@ -295,8 +229,6 @@ export default DropTarget(ItemTypes,
             if (item.type === ItemTypes[3]) {
                 const deltaLeft = delta.x;
                 const deltaTop = delta.y;
-                //const left = Math.round((item.left - item.width) + delta.x);
-                //const top = Math.round((item.top - item.height) + delta.y);
                 component.resizeText(item.id, deltaLeft, deltaTop, item.width, item.height);
             }
         },
@@ -308,3 +240,4 @@ export default DropTarget(ItemTypes,
         canDrop: monitor.canDrop(),
     })
 )(MainEditorArea);
+export default connect(mapStateToProps, mapDispatchToProps)(dragService);
