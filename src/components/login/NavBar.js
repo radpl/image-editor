@@ -1,25 +1,19 @@
-import React from "react";
-import { useAuth0 } from "../../react-auth0-spa";
+import React, { useEffect, useState } from "react";
+//import { useAuth0 } from "../../react-auth0-spa";
 import { Link, withRouter } from 'react-router-dom';
 import styles from './navbar.module.css';
+import { connect } from "react-redux";
+import { getUser, signIn, signOut } from "../../redux/actions/userActions";
 
 function NavBar(props) {
 
-  const { isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
-  const logoutWithRedirect = () =>
-    logout({
-      returnTo: window.location.origin
-    });
-
-  const signOut = () => {
-    logoutWithRedirect();
-    //props.history.replace('/');
-  };
-
-  const signIn = () => {
-    //localStorage.setItem("REDIRECT_AFTER_LOGIN", JSON.stringify(props.history.location));
-    loginWithRedirect({});
+  const userSignIn = () => {
+    props.signIn();
   }
+
+  useEffect(() => {
+    props.getUser();
+  }, [])
 
   return (
     <nav className={styles.navMenu}>
@@ -28,18 +22,29 @@ function NavBar(props) {
         <li ><Link to="/profile" className={styles.liMenu}>My Profile</Link></li>
       </ul>
       {
-        !isAuthenticated &&
-        <button onClick={signIn}>Sign In</button>
+        !(props.user && props.user.isAuthenticated) &&
+        <button onClick={userSignIn}>Sign In</button>
       }
       {
-        isAuthenticated &&
+        props.user && props.user.isAuthenticated &&
         <div>
-          <label>Welcome, {user && user.email}</label>
-          <button onClick={() => { signOut() }}> Sign Out</button>
+          <label>Welcome, {props.user && props.user.email}</label>
+          <button onClick={() => { props.signOut({ returnTo: window.location.origin }) }}> Sign Out</button>
         </div>
       }
     </nav>
   );
 }
+function mapStateToProps(state, ownProps) {
+  return {
+    user: state.user,
+  };
+}
 
-export default withRouter(NavBar);
+const mapDispatchToProps = {
+  getUser,
+  signIn,
+  signOut
+};
+const navBarWithRouter = withRouter(NavBar)
+export default connect(mapStateToProps, mapDispatchToProps)(navBarWithRouter);

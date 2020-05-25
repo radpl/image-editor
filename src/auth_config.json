@@ -1,4 +1,5 @@
 {
   "domain": "dev-cbv9d1rm.auth0.com",
-  "clientId": "63rXu0URC9PV1D1W0RJqFL00KMvUigaW"
+  "clientId": "63rXu0URC9PV1D1W0RJqFL00KMvUigaW",
+  "audience": "https://api.alwera.pl"
 }

@@ -7,6 +7,7 @@ import NavBar from "./login/NavBar";
 import "react-toastify/dist/ReactToastify.css";
 import MainEditor from './MainEditor';
 import Profile from './login/Profile';
+import Callback from "./login/Callback";
 
 export default function App(props) {
 
@@ -16,6 +17,7 @@ export default function App(props) {
     <div className="container">
       <NavBar />
       <Route exact path='/' component={MainEditor} />
+      <Route exact path='/callback' component={Callback} />
       <Route path='/profile' component={Profile} />
     </div>
   );

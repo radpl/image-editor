@@ -26,7 +26,7 @@ const onRedirectCallback = appState => {
 
 ReactDOM.render(
     <BrowserRouter>
-        <Auth0Provider domain={config.domain} client_id={config.clientId} redirect_uri={window.location.origin} onRedirectCallback={onRedirectCallback} >
+        <Auth0Provider domain={config.domain} client_id={config.clientId} audience={config.audience} redirect_uri={window.location.origin} onRedirectCallback={onRedirectCallback} >
             <ReduxProvider store={store}>
                 <DndProvider backend={HTML5Backend}>
                     <App />
