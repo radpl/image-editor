@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import MainEditor from './MainEditor';
 import Profile from './login/Profile';
 import Callback from "./login/Callback";
+import LoginForm from "./login/LoginForm";
 
 export default function App(props) {
 

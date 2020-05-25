@@ -1,14 +1,14 @@
 import React from 'react'
 
-export default function InputText(props) {
+export default function InputText({ name, placeholder, value, onChange, type = "text" }) {
     return (
         <div>
             <input
-                type="text"
-                name={props.name}
-                placeholder={props.placeholder}
-                value={props.value}
-                onChange={props.onChange}
+                type={type}
+                name={name}
+                placeholder={placeholder}
+                value={value}
+                onChange={onChange}
             />
         </div>
     )
