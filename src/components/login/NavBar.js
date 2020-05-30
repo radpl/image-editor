@@ -1,28 +1,34 @@
 import React, { useEffect, useState } from "react";
-//import { useAuth0 } from "../../react-auth0-spa";
+import { useAuth0 } from "../../react-auth0-spa";
 import { Link, withRouter } from 'react-router-dom';
 import styles from './navbar.module.css';
 import { connect } from "react-redux";
 import { getUser, signIn, signOut } from "../../redux/actions/userActions";
-import LoginForm from "./LoginForm";
+//import LoginForm from "./LoginForm";
 
 function NavBar(props) {
 
-  const [isVisible, setVisible] = useState(false);
+  // const [isVisible, setVisible] = useState(false);
+  const { isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
 
-  const userSignIn = () => {
-    //props.signIn();
-    setVisible(true);
-  }
+  const logoutWithRedirect = () =>
+    logout({
+      returnTo: window.location.origin
+    });
 
-  const hideLogin = (event) => {
-    console.log("Hide Login");
-    setVisible(false);
+  const signOut = () => {
+    logoutWithRedirect();
+  };
+
+  const signIn = () => {
+    loginWithRedirect({});
   }
 
   useEffect(() => {
-    props.getUser();
-  }, [])
+    if (isAuthenticated) {
+      props.getUser();
+    }
+  }, [isAuthenticated])
 
   return (
     <>
@@ -32,18 +38,18 @@ function NavBar(props) {
           <li ><Link to="/profile" className={styles.liMenu}>My Profile</Link></li>
         </ul>
         {
-          !(props.user && props.user.isAuthenticated) &&
-          <button onClick={userSignIn}>Sign In</button>
+          !isAuthenticated &&
+          <button onClick={signIn}>Sign In</button>
         }
         {
-          props.user && props.user.isAuthenticated &&
+          props.user && isAuthenticated &&
           <div>
             <label>Welcome, {props.user && props.user.email}</label>
-            <button onClick={() => { props.signOut({ returnTo: window.location.origin }) }}> Sign Out</button>
+            <button onClick={() => { signOut() }}> Sign Out</button>
           </div>
         }
       </nav>
-      {isVisible && <LoginForm hideLogin={hideLogin} />}
+      {/* {isVisible && <LoginForm hideLogin={hideLogin} />} */}
     </>
   );
 }
@@ -54,9 +60,9 @@ function mapStateToProps(state, ownProps) {
 }
 
 const mapDispatchToProps = {
-  getUser,
-  signIn,
-  signOut
+  getUser
+  // signIn,
+  // signOut
 };
 const navBarWithRouter = withRouter(NavBar)
 export default connect(mapStateToProps, mapDispatchToProps)(navBarWithRouter);

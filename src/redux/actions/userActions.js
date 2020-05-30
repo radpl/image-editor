@@ -28,7 +28,10 @@ export function getUser() {
   return function (dispatch) {
     return userApi.getUser()
       .then(user => {
-        dispatch(signInUserSuccess(user));
+        userApi.saveSignUp(user)
+          .then(ok => {
+            dispatch(signInUserSuccess({ ...user, db: ok }));
+          })
       })
       .catch(error => {
         dispatch(signInUserFailed());

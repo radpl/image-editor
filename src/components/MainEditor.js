@@ -28,10 +28,10 @@ export default function MainEditor(props) {
 
   useEffect(() => {
     if (images.length === 0) {
-      getRandomImages(4);
+      getRandomImages(1);
     }
     if (logos.length === 0) {
-      getRandomLogosFetch(3);
+      getRandomLogosFetch(1);
     }
   }, [])
 
@@ -43,7 +43,7 @@ export default function MainEditor(props) {
             setImages(oldArray => [...oldArray, "data:image/png[jpg];base64," + img]);
           });
         });
-      }, 2000 * i)
+      }, 3000 * i)
 
     }
   }
@@ -55,7 +55,7 @@ export default function MainEditor(props) {
             setLogos(oldArray => [...oldArray, "data:image/png[jpg];base64," + img]);
           });
         });
-      }, 2000 * i)
+      }, 3000 * i)
 
     }
   }

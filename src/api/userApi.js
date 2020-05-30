@@ -44,7 +44,6 @@ export async function getUser() {
       return auth.getUser();
     } else {
       throw Error;
-      //auth.loginWithRedirect({ redirect_uri: 'http://localhost:3000/callback' })
     }
   } catch (e) {
     throw Error;
@@ -65,14 +64,25 @@ export async function signOut(origin) {
   return auth.logout(origin);
 }
 
-export function saveSignUp() {
-  return fetch(baseUrl + "/signup", {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      Authorization: `Bearer ${auth0.getAccessToken()}`
+export async function saveSignUp(user) {
+  try {
+    const auth = await auth0();
+    const token = await auth.getTokenSilently();
+    if (token) {
+      return fetch(baseUrl + "/signup", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ name: user.nickname, email: user.email })
+      })
+        .then(handleResponse)
+        .catch(handleError);
     }
-  })
-    .then(handleResponse)
-    .catch(handleError);
+    throw Error;
+  } catch (err) {
+    throw Error;
+  }
+
 }
