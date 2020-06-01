@@ -28,10 +28,10 @@ export default function MainEditor(props) {
 
   useEffect(() => {
     if (images.length === 0) {
-      getRandomImages(1);
+      getRandomImages(4);
     }
     if (logos.length === 0) {
-      getRandomLogosFetch(1);
+      getRandomLogosFetch(3);
     }
   }, [])
 
