@@ -1,5 +1,6 @@
 export default {
   logos: {},
   texts: {},
-  user: {}
+  user: {},
+  color: "#000000"
 };

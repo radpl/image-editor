@@ -5,12 +5,12 @@ import RadioButtons from './RadioButtons';
 import SimpleButton from '../common/SimpleButton';
 import ColorPicker from './ColorPicker';
 import { connect } from 'react-redux';
-import { addText } from "../../redux/actions/textActions"
+import { addText } from "../../redux/actions/textActions";
+
 function AddText(props) {
 
     const [inputValue, setInput] = useState("Example text");
     const [fontFamily, setFont] = useState("Times New Roman");
-    const [fontColor, setColor] = useState("#000");
 
     const handleChange = (event) => {
         const { value } = event.target;
@@ -27,15 +27,15 @@ function AddText(props) {
         setFont(mapping[value]);
     }
 
-    const handleColorChange = (color, event) => {
-        setColor(color.hex);
+    // const handleColorChange = (color, event) => {
+    //     setColor(color.hex);
 
-    }
+    // }
 
     const addTextPosition = (event) => {
         event.preventDefault();
         const id = Object.keys(props.texts).length + 1;
-        props.addText({ id, left: 200, top: 120, clicked: false, render: true, value: inputValue, font: fontFamily, color: fontColor, fontSize: 20 });
+        props.addText({ id, left: 200, top: 120, clicked: false, render: true, value: inputValue, font: fontFamily, color: props.color, fontSize: 20 });
     }
 
     return (
@@ -43,7 +43,7 @@ function AddText(props) {
             <SimpleHeader size="smallLeft">Add text</SimpleHeader>
             <InputField onChange={handleChange} value={inputValue} placeholder="Input your text" />
             <RadioButtons handleClick={handleFont} />
-            <ColorPicker color={fontColor} handleColorChange={handleColorChange} />
+            <ColorPicker />
             <SimpleButton handleClick={addTextPosition}>Add Text</SimpleButton>
         </div>
     )
@@ -51,7 +51,8 @@ function AddText(props) {
 
 function mapStateToProps(state, ownProps) {
     return {
-        texts: state.texts
+        texts: state.texts,
+        color: state.color
     };
 }
 

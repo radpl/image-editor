@@ -11,6 +11,7 @@ import styles from './MainEditorArea.module.css';
 import { connect } from "react-redux";
 import { addLogo, deleteLogo } from "../../redux/actions/logoActions";
 import { addText, deleteText } from "../../redux/actions/textActions";
+import Canvas from './Canvas';
 
 class MainEditorArea extends Component {
 
@@ -122,6 +123,7 @@ class MainEditorArea extends Component {
         return connectDropTarget(
             <div >
                 <div className={`${styles.mainArea} download`} style={style}>
+                    <Canvas logoImages={this.props.logoImages} />
                     {Object.keys(logos).map(key => {
                         const { left, top, width, height, render, clicked } = logos[key];
                         if (!render) return false;

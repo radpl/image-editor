@@ -9,6 +9,7 @@ import MainEditor from './MainEditor';
 import Profile from './login/Profile';
 import Callback from "./login/Callback";
 import LoginForm from "./login/LoginForm";
+import Canvas from "./editor/Canvas";
 
 export default function App(props) {
 
@@ -20,6 +21,7 @@ export default function App(props) {
       <Route exact path='/' component={MainEditor} />
       <Route exact path='/callback' component={Callback} />
       <Route path='/profile' component={Profile} />
+      <Route path='/draw' component={Canvas} />
     </div>
   );
 }

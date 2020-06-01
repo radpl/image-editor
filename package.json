@@ -7,17 +7,20 @@
     "html2canvas": "^1.0.0-rc.5",
     "image-to-base64": "^2.1.0",
     "immutability-helper": "^3.0.2",
+    "konva": "^6.0.0",
     "react": "^16.8.6",
     "react-color": "^2.18.1",
     "react-dnd": "^10.0.2",
     "react-dnd-html5-backend": "^10.0.2",
     "react-dom": "^16.8.6",
+    "react-konva": "^16.13.0-3",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.2.0",
     "react-toastify": "^6.0.5",
     "redux": "^4.0.5",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "use-image": "^1.0.5"
   },
   "scripts": {
     "start": "react-scripts start",
