@@ -5,6 +5,8 @@ import styles from './MainEditorArea.module.css';
 import { connect } from "react-redux";
 import { addLogo, deleteLogo } from "../../redux/actions/logoActions";
 import { addText, deleteText } from "../../redux/actions/textActions";
+import { saveUserImage } from "../../redux/actions/userActions";
+
 import Canvas from './Canvas';
 
 class MainEditorArea extends Component {
@@ -68,6 +70,17 @@ class MainEditorArea extends Component {
             a.click();
         });
     }
+    saveImage = () => {
+        this.props.saveUserImage({
+            user: this.props.user,
+            image: {
+                name: "Some name",
+                description: "Some description",
+                texts: this.props.texts,
+                logos: this.props.logos
+            }
+        });
+    }
 
     render() {
         const style = {
@@ -85,7 +98,8 @@ class MainEditorArea extends Component {
                 <div className={`${styles.mainArea} download`} style={style}>
                     <Canvas logoImages={this.props.logoImages} />
                 </div>
-                <SimpleButton handleClick={this.downloadImage}>Download as image</SimpleButton>
+                <SimpleButton handleClick={this.downloadImage}>Download image</SimpleButton>
+                <SimpleButton handleClick={this.saveImage}>Save image</SimpleButton>
             </div>
         );
     }
@@ -94,7 +108,9 @@ class MainEditorArea extends Component {
 function mapStateToProps(state, ownProps) {
     return {
         logos: state.logos,
-        texts: state.texts
+        texts: state.texts,
+        user: state.user && state.user.db && state.user.db.exists,
+
     };
 }
 
@@ -103,6 +119,7 @@ const mapDispatchToProps = {
     deleteLogo,
     addText,
     deleteText,
+    saveUserImage
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainEditorArea);

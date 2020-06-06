@@ -23,3 +23,7 @@ export const SIGN_OUT_USER_SUCCESS = "SIGN_OUT_USER_SUCCESS";
 export const SIGN_IN_PROGRESS = "SIGN_IN_PROGRESS";
 
 export const COLOR_CHANGE = "COLOR_CHANGE";
+export const SELECT_TOOL = "SELECT_TOOL";
+
+export const SAVE_IMAGE_SUCCESS = "";
+export const SAVE_IMAGE_FAILED = "";

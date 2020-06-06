@@ -5,6 +5,7 @@ import BackgroundContainer from './background/BackgroundContainer';
 import LogoContainer from './logo/LogoContainer';
 import background from '../assets/bgAssets';
 import { getRandom, getRandomLogos, toDataUrl, searchImages } from '../api/sourceApi';
+import DrawContainer from "./text/DrawContainer";
 
 
 export default function MainEditor(props) {
@@ -43,7 +44,7 @@ export default function MainEditor(props) {
             setImages(oldArray => [...oldArray, "data:image/png[jpg];base64," + img]);
           });
         });
-      }, 3000 * i)
+      }, 4000 * i)
 
     }
   }
@@ -55,7 +56,7 @@ export default function MainEditor(props) {
             setLogos(oldArray => [...oldArray, "data:image/png[jpg];base64," + img]);
           });
         });
-      }, 3000 * i)
+      }, 4000 * i)
 
     }
   }
@@ -85,6 +86,7 @@ export default function MainEditor(props) {
         </div>
         <div className="right-sidebar">
           <LogoContainer logos={logos} />
+          <DrawContainer />
         </div>
       </div>
     </div>

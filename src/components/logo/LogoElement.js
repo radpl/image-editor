@@ -7,7 +7,7 @@ function LogoElement(props) {
     const addLogoPosition = (event) => {
         event.preventDefault();
         const id = Object.keys(props.logos).length + 1;
-        props.addLogo({ id, logoid: props.id, left: 100, top: 100, clicked: false, render: true });
+        props.addLogo({ id, logoid: props.id, x: 100, y: 100, clicked: false, render: true });
     }
 
     return (

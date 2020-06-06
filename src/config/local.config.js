@@ -1,5 +1,5 @@
 const local = {
-  BASE_API_URL: "http://localhost:5002",
+  BASE_API_URL: "http://localhost:5002/api",
 }
 
 export default local;

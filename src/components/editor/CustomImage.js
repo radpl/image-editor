@@ -26,7 +26,7 @@ function CustomImage(props) {
         image={image}
         draggable={true}
         ref={shapeRef}
-
+        onDragEnd={e => props.onDragEnd(e)}
       />
       {props.isSelected && (
         <Transformer

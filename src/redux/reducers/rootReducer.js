@@ -5,6 +5,7 @@ import background from "./backgroundReducer"
 import editor from "./editorReducer";
 import user from "./userReducer";
 import color from './colorReducer';
+import settings from "./settingsReducer";
 
 //import apiCallsInProgress from "./apiStatusReducer";
 
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   editor,
   user,
   color,
+  settings
   //apiCallsInProgress
 });
 

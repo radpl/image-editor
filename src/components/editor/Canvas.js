@@ -18,7 +18,7 @@ function Canvas(props) {
   const stageRef = useRef();
 
   const handleMouseDown = () => {
-    _drawing.current = true && !selectedId;
+    _drawing.current = true && !selectedId && props.tool && props.tool.freeline;
     setColor([...colors, props.color]);
     setLine([...lines, []]);
   }
@@ -41,7 +41,6 @@ function Canvas(props) {
   };
 
   const checkDeselect = e => {
-    // deselect when clicked on empty area
     const clickedOnEmpty = e.target === e.target.getStage();
     if (clickedOnEmpty) {
       selectShape(null);
@@ -65,31 +64,54 @@ function Canvas(props) {
           <Line key={i} points={line} stroke={colors[i]} draggable={true} />
         ))}
         {props.texts && Object.keys(props.texts).map((key, index) => {
-          return <CustomText text={props.texts[key].value} draggable={true}
-            fontFamily={props.texts[key].font}
-            fontSize={props.texts[key].fontSize}
-            fill={props.texts[key].color}
-            isSelected={index === selTextId}
-            onSelect={() => {
-              selectText(index);
-            }}
-            onDragEnd={e => {
-              const x = e.target.x();
-              const y = e.target.y();
-              props.addText({ ...props.texts[key], x, y })
-            }}
+          return (<>
+            {props.texts[key].render && <CustomText text={props.texts[key].value} draggable={true}
+              fontFamily={props.texts[key].font}
+              fontSize={props.texts[key].fontSize}
+              fill={props.texts[key].color}
+              isSelected={index === selTextId}
+              onSelect={(e) => {
+                selectText(index);
+                const width = e.target.width();
+                const height = e.target.height();
+                const x = e.target.x();
+                const y = e.target.y();
+                props.addText({ ...props.texts[key], x, y, width, height })
+              }}
+              onDragEnd={e => {
+                const width = e.target.width();
+                const height = e.target.height();
+                const x = e.target.x();
+                const y = e.target.y();
+                props.addText({ ...props.texts[key], x, y, width, height })
+              }}
 
-          />
+            />}
+            {(index === selTextId) && props.texts[key].render && <Text onClick={() => props.addText({ id: key, render: false })} text="x" fontSize="15" strokeWidth="0.5" fontStyle="bold" fill="#000000" stroke="#FFFFFF" x={props.texts[key].x + props.texts[key].width + 5} y={props.texts[key].y - 15} />}
+          </>)
         })}
         {props.logos && Object.keys(props.logos).map((key, index) => {
           return (
             <>
-              <CustomImage src={props.logoImages[props.logos[key].logoid]} draggable={true} x={props.logos[key].top} y={props.logos[key].left}
-                isSelected={index === selectedId}
-                onSelect={() => {
-                  selectShape(index);
-                }} />
-              {(index === selectedId) && <Text text="X" x={props.logos[key].top} y={props.logos[key].left} />}
+              {props.logos[key].render &&
+                <CustomImage src={props.logoImages[+props.logos[key].logoid - 1]} draggable={true} x={props.logos[key].x} y={props.logos[key].y}
+                  isSelected={index === selectedId}
+                  onSelect={(e) => {
+                    selectShape(index);
+                    const width = e.target.width();
+                    const height = e.target.height();
+                    const x = e.target.x();
+                    const y = e.target.y();
+                    props.addLogo({ ...props.logos[key], x, y, width, height })
+                  }}
+                  onDragEnd={e => {
+                    const width = e.target.width();
+                    const height = e.target.height();
+                    const x = e.target.x();
+                    const y = e.target.y();
+                    props.addLogo({ ...props.logos[key], x, y, width, height })
+                  }} />}
+              {(index === selectedId) && props.logos[key].render && <Text onClick={() => props.addLogo({ id: key, render: false })} text="x" fontSize="15" strokeWidth="0.5" fontStyle="bold" fill="#000000" stroke="#FFFFFF" x={props.logos[key].x + props.logos[key].width + 5} y={props.logos[key].y - 15} />}
             </>
           )
         })}
@@ -111,7 +133,8 @@ function mapStateToProps(state, ownProps) {
   return {
     color: state.color,
     texts: state.texts,
-    logos: state.logos
+    logos: state.logos,
+    tool: state.settings.tool
   };
 }
 

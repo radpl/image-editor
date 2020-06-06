@@ -2,5 +2,6 @@ export default {
   logos: {},
   texts: {},
   user: {},
-  color: "#000000"
+  color: "#000000",
+  settings: {}
 };
