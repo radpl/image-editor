@@ -3,12 +3,16 @@ import { Stage, Layer, Line, Text, Image } from "react-konva";
 import { connect } from 'react-redux';
 //import useImage from 'use-image';
 import CustomImage from './CustomImage';
+import CustomText from './CustomText';
+import { addLogo, deleteLogo } from "../../redux/actions/logoActions";
+import { addText, deleteText } from "../../redux/actions/textActions";
 
 function Canvas(props) {
 
   const [colors, setColor] = useState([]);
   const [lines, setLine] = useState([]);
   const [selectedId, selectShape] = useState(null);
+  const [selTextId, selectText] = useState(null);
 
   const _drawing = useRef(false);
   const stageRef = useRef();
@@ -17,12 +21,7 @@ function Canvas(props) {
     _drawing.current = true && !selectedId;
     setColor([...colors, props.color]);
     setLine([...lines, []]);
-
-    // this.setState({
-    //   colors: [...this.state.colors, this.props.color],
-    //   lines: [...this.state.lines, []]
-    // });
-  };
+  }
 
   const handleMouseUp = () => {
     _drawing.current = false;
@@ -46,6 +45,7 @@ function Canvas(props) {
     const clickedOnEmpty = e.target === e.target.getStage();
     if (clickedOnEmpty) {
       selectShape(null);
+      selectText(null);
     }
   };
 
@@ -64,22 +64,48 @@ function Canvas(props) {
         {lines && lines.map((line, i) => (
           <Line key={i} points={line} stroke={colors[i]} draggable={true} />
         ))}
-        {props.texts && Object.keys(props.texts).map(key => {
-          return <Text text={props.texts[key].value} draggable={true} fontSize={props.texts[key].fontSize} />
-        })}
-        {props.logoImages && props.logoImages.map((logo, index) => {
-
-          return <CustomImage src={logo} draggable={true} x={100} y={100}
-            isSelected={index === selectedId}
+        {props.texts && Object.keys(props.texts).map((key, index) => {
+          return <CustomText text={props.texts[key].value} draggable={true}
+            fontFamily={props.texts[key].font}
+            fontSize={props.texts[key].fontSize}
+            fill={props.texts[key].color}
+            isSelected={index === selTextId}
             onSelect={() => {
-              selectShape(index);
-            }} />
+              selectText(index);
+            }}
+            onDragEnd={e => {
+              const x = e.target.x();
+              const y = e.target.y();
+              props.addText({ ...props.texts[key], x, y })
+            }}
+
+          />
         })}
+        {props.logos && Object.keys(props.logos).map((key, index) => {
+          return (
+            <>
+              <CustomImage src={props.logoImages[props.logos[key].logoid]} draggable={true} x={props.logos[key].top} y={props.logos[key].left}
+                isSelected={index === selectedId}
+                onSelect={() => {
+                  selectShape(index);
+                }} />
+              {(index === selectedId) && <Text text="X" x={props.logos[key].top} y={props.logos[key].left} />}
+            </>
+          )
+        })}
+
       </Layer>
     </Stage>
   )
 
 }
+
+const mapDispatchToProps = {
+  addLogo,
+  deleteLogo,
+  addText,
+  deleteText,
+};
 
 function mapStateToProps(state, ownProps) {
   return {
@@ -90,4 +116,4 @@ function mapStateToProps(state, ownProps) {
 }
 
 
-export default connect(mapStateToProps)(Canvas)
+export default connect(mapStateToProps, mapDispatchToProps)(Canvas)

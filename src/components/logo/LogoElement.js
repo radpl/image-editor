@@ -1,33 +1,33 @@
 import React from 'react'
-import { DragSource } from "react-dnd";
-import ItemTypes from "../dnd/ItemTypes";
+import { connect } from 'react-redux';
+import { addLogo } from "../../redux/actions/logoActions";
 
-function LogoElement({ hideSourceOnDrag = false, left, top, width, height, connectDragSource, isDragging, ...props }) {
+function LogoElement(props) {
 
-    // if (isDragging && hideSourceOnDrag) {
-    //     return null;
-    // }
+    const addLogoPosition = (event) => {
+        event.preventDefault();
+        const id = Object.keys(props.logos).length + 1;
+        props.addLogo({ id, logoid: props.id, left: 100, top: 100, clicked: false, render: true });
+    }
 
-    return connectDragSource(
+    return (
         <img
             id={props.id}
             src={props.image}
             alt={props.alt}
             style={props.element}
-            onClick={props.handleClick} />
+            onClick={addLogoPosition} />
     );
 }
 
-export default DragSource(
-    ItemTypes[0],
-    {
-        beginDrag(props) {
-            const { id, left, top, width, height } = props;
-            return { id, left, top, width, height, type: ItemTypes[0] };
-        }
-    },
-    (connect, monitor) => ({
-        connectDragSource: connect.dragSource(),
-        isDragging: monitor.isDragging()
-    })
-)(LogoElement);
+function mapStateToProps(state, ownProps) {
+    return {
+        logos: state.logos,
+    };
+}
+
+const mapDispatchToProps = {
+    addLogo,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(LogoElement);

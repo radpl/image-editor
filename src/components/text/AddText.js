@@ -35,7 +35,7 @@ function AddText(props) {
     const addTextPosition = (event) => {
         event.preventDefault();
         const id = Object.keys(props.texts).length + 1;
-        props.addText({ id, left: 200, top: 120, clicked: false, render: true, value: inputValue, font: fontFamily, color: props.color, fontSize: 20 });
+        props.addText({ id, x: 200, y: 120, clicked: false, render: true, value: inputValue, font: fontFamily, color: props.color, fontSize: 20 });
     }
 
     return (
