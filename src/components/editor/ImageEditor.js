@@ -8,6 +8,7 @@ export default function ImageEditor(props) {
         <div className={styles.mainContainer}>
             <SimpleHeader size="medium">Simple Editor</SimpleHeader>
             <MainEditorArea
+                backgroundImages={props.backgroundImages}
                 selectedBackground={props.selectedBackground}
                 logoImages={props.logoImages}
             />

@@ -35,6 +35,7 @@ function NavBar(props) {
       <nav className={styles.navMenu}>
         <ul className={styles.ulMenu}>
           <li ><Link to="/" className={styles.liMenu}>Home</Link></li>
+          <li ><Link to="/browse" className={styles.liMenu}>Browse</Link></li>
           <li ><Link to="/profile" className={styles.liMenu}>My Profile</Link></li>
         </ul>
         {

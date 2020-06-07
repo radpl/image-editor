@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import './App.css';
 import NavBar from "./login/NavBar";
 //import { useAuth0 } from "../react-auth0-spa";
@@ -10,6 +10,7 @@ import Profile from './login/Profile';
 import Callback from "./login/Callback";
 import LoginForm from "./login/LoginForm";
 import Canvas from "./editor/Canvas";
+import BrowseContainer from './browser/BrowseContainer';
 
 export default function App(props) {
 
@@ -18,10 +19,14 @@ export default function App(props) {
   return (
     <div className="container">
       <NavBar />
-      <Route exact path='/' component={MainEditor} />
-      <Route exact path='/callback' component={Callback} />
-      <Route path='/profile' component={Profile} />
-      <Route path='/draw' component={Canvas} />
+      <Switch>
+        <Route exact path='/' component={MainEditor} />
+        <Route exact path='/callback' component={Callback} />
+        <Route path='/profile' component={Profile} />
+        <Route path='/draw' component={Canvas} />
+        <Route path='/browse' component={BrowseContainer} />
+        <Route path='/edit/:imageId' component={MainEditor} />
+      </Switch>
     </div>
   );
 }

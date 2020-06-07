@@ -15,6 +15,19 @@ export default function logosReducer(state = initialState.logos, action) {
         logos[action.logo.id] = { ...action.logo };
         return logos;
       }
+    case types.SAVE_IMAGE_LOGOS_SUCCESS:
+      {
+        const logos = Object.assign({}, state);
+        logos['logoImages'] = [...action.logoImages];
+        return logos;
+      }
+    case types.SAVE_IMAGE_LOGOS_REMOTE:
+      {
+        const logos = Object.assign({}, state);
+        const logoImages = logos['logoImages'] || [];
+        logos['logoImages'] = [...logoImages, action.logos];
+        return logos;
+      }
     default:
       return state;
   }

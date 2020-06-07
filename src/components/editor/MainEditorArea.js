@@ -3,7 +3,9 @@ import html2canvas from 'html2canvas';
 import SimpleButton from '../common/SimpleButton';
 import styles from './MainEditorArea.module.css';
 import { connect } from "react-redux";
-import { addLogo, deleteLogo } from "../../redux/actions/logoActions";
+import { addLogo, deleteLogo, saveLogo } from "../../redux/actions/logoActions";
+import { saveBackgrounds } from "../../redux/actions/backgroundActions";
+
 import { addText, deleteText } from "../../redux/actions/textActions";
 import { saveUserImage } from "../../redux/actions/userActions";
 
@@ -71,15 +73,28 @@ class MainEditorArea extends Component {
         });
     }
     saveImage = () => {
-        this.props.saveUserImage({
-            user: this.props.user,
-            image: {
-                name: "Some name",
-                description: "Some description",
-                texts: this.props.texts,
-                logos: this.props.logos
-            }
+        let editorArea = document.querySelector('.download');
+        html2canvas(editorArea).then((canvas) => {
+            const thumbnail = canvas.toDataURL("image/jpeg", 0.5);
+
+            this.props.saveUserImage({
+                user: this.props.user,
+                image: {
+                    name: "Some name",
+                    description: "Some description",
+                    texts: this.props.texts,
+                    logos: this.props.logos
+                },
+                thumbnail: thumbnail
+            }).then(response => {
+                const imageid = response._id;
+                this.props.saveLogo({ logos: this.props.logoImages, image: imageid });
+                this.props.saveBackgrounds({ backgrounds: this.props.backgroundImages, image: imageid });
+            });
         });
+
+
+
     }
 
     render() {
@@ -109,7 +124,7 @@ function mapStateToProps(state, ownProps) {
     return {
         logos: state.logos,
         texts: state.texts,
-        user: state.user && state.user.db && state.user.db.exists,
+        user: state.user && state.user.db && state.user.db.user,
 
     };
 }
@@ -119,7 +134,9 @@ const mapDispatchToProps = {
     deleteLogo,
     addText,
     deleteText,
-    saveUserImage
+    saveUserImage,
+    saveLogo,
+    saveBackgrounds,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainEditorArea);

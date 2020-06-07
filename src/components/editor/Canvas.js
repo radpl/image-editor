@@ -9,9 +9,10 @@ import { addText, deleteText } from "../../redux/actions/textActions";
 
 function Canvas(props) {
 
-  const [colors, setColor] = useState([]);
+
   const [lines, setLine] = useState([]);
   const [selectedId, selectShape] = useState(null);
+  const [colors, setColor] = useState([]);
   const [selTextId, selectText] = useState(null);
 
   const _drawing = useRef(false);

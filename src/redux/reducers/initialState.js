@@ -3,5 +3,7 @@ export default {
   texts: {},
   user: {},
   color: "#000000",
-  settings: {}
+  settings: {},
+  backgrounds: [],
+  images: []
 };

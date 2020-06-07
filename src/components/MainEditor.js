@@ -6,9 +6,13 @@ import LogoContainer from './logo/LogoContainer';
 import background from '../assets/bgAssets';
 import { getRandom, getRandomLogos, toDataUrl, searchImages } from '../api/sourceApi';
 import DrawContainer from "./text/DrawContainer";
+import { getImageLogos, saveImageLogosRemote } from "../redux/actions/logoActions";
+import { getImageBackgrounds, saveImageBackgroundsRemote } from "../redux/actions/backgroundActions";
+
+import { connect } from "react-redux";
 
 
-export default function MainEditor(props) {
+function MainEditor(props) {
 
   const [bgState, setBackground] = useState(background.empty);
   const [images, setImages] = useState([]);
@@ -28,12 +32,19 @@ export default function MainEditor(props) {
   }
 
   useEffect(() => {
-    if (images.length === 0) {
-      getRandomImages(4);
+    if (props.match.params.imageId) {
+      props.getImageLogos(props.match.params.imageId);
+      props.getImageBackgrounds(props.match.params.imageId);
+
+    } else {
+      if (images.length === 0) {
+        getRandomImages(4);
+      }
+      if (logos.length === 0) {
+        getRandomLogosFetch(3);
+      }
     }
-    if (logos.length === 0) {
-      getRandomLogosFetch(3);
-    }
+
   }, [])
 
   const getRandomImages = (number) => {
@@ -41,6 +52,7 @@ export default function MainEditor(props) {
       setTimeout(() => {
         getRandom().then((response) => {
           toDataUrl(response.url).then(img => {
+            props.saveImageBackgroundsRemote("data:image/png[jpg];base64," + img);
             setImages(oldArray => [...oldArray, "data:image/png[jpg];base64," + img]);
           });
         });
@@ -53,6 +65,7 @@ export default function MainEditor(props) {
       setTimeout(() => {
         getRandomLogos().then((response) => {
           toDataUrl(response.url).then(img => {
+            props.saveImageLogosRemote("data:image/png[jpg];base64," + img);
             setLogos(oldArray => [...oldArray, "data:image/png[jpg];base64," + img]);
           });
         });
@@ -79,13 +92,13 @@ export default function MainEditor(props) {
       <div className="columns">
         <div className="left-sidebar">
           <BackgroundContainer handleSelectBg={handleSelectBg} handleDeleteBg={handleDeleteBg}
-            handleSearchImages={handleSearchImages} backgroundImages={images} />
+            handleSearchImages={handleSearchImages} backgroundImages={props.backgrounds} />
         </div>
         <div className="main-panel">
-          <ImageEditor selectedBackground={bgState} backgroundImages={images} logoImages={logos} />
+          <ImageEditor selectedBackground={bgState} backgroundImages={props.backgrounds} logoImages={props.logoImages} />
         </div>
         <div className="right-sidebar">
-          <LogoContainer logos={logos} />
+          <LogoContainer logos={props.logoImages} />
           <DrawContainer />
         </div>
       </div>
@@ -93,3 +106,20 @@ export default function MainEditor(props) {
   );
 }
 
+function mapStateToProps(state, ownProps) {
+  return {
+    user: state.user && state.user.db && state.user.db.user,
+    images: state.images,
+    backgrounds: state.backgrounds,
+    logoImages: (state.logos && state.logos.logoImages) || []
+  };
+}
+
+const mapDispatchToProps = {
+  getImageLogos,
+  getImageBackgrounds,
+  saveImageBackgroundsRemote,
+  saveImageLogosRemote
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainEditor)

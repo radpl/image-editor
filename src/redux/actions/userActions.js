@@ -52,16 +52,17 @@ export function getUser() {
 
 export function saveUserImage(image) {
   return function (dispatch) {
-    return imageApi.saveImage(image)
-      .then(ok => {
-        dispatch(saveImageSuccess({ ...ok }));
-      })
-      .catch(error => {
-        dispatch(saveImageFailed());
-        throw error;
-      });
+    return imageApi.saveImage(image);
+    // .then(ok => {
+    //   dispatch(saveImageSuccess({ ...ok }));
+    // })
+    // .catch(error => {
+    //   dispatch(saveImageFailed());
+    //   throw error;
+    // });
   };
 }
+
 
 export function signOut(origin) {
   return function (dispatch) {
