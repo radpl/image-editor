@@ -1,8 +1,0 @@
-div.mainResize:hover{
-    opacity:0.5;
-    border:solid 1px black;
-}
-
-div.mainResize{
-    opacity:0;
-}

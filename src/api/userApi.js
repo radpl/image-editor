@@ -3,7 +3,6 @@ import auth0 from "../auth/auth";
 
 const baseUrl = config.BASE_API_URL + "/users";
 
-
 async function handleResponse(response) {
   if (response.ok) return response.json();
   throw new Error("Network response was not ok.");
@@ -50,19 +49,10 @@ export async function getUser() {
   }
 };
 
-export async function signIn() {
-  try {
-    const auth = await auth0();
-    await auth.loginWithRedirect({});
-  } catch (e) {
-    throw Error;
-  }
-};
-
-export async function signOut(origin) {
-  const auth = await auth0();
-  return auth.logout(origin);
-}
+// export async function signOut(origin) {
+//   const auth = await auth0();
+//   return auth.logout(origin);
+// }
 
 export async function saveSignUp(user) {
   try {

@@ -2,8 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './components/App';
-import { DndProvider } from "react-dnd";
-import HTML5Backend from "react-dnd-html5-backend";
 import { Provider as ReduxProvider } from 'react-redux';
 import configureStore from './redux/configureStore';
 import { Auth0Provider } from "./react-auth0-spa";
@@ -28,9 +26,7 @@ ReactDOM.render(
     <BrowserRouter>
         <Auth0Provider domain={config.domain} client_id={config.clientId} audience={config.audience} redirect_uri={window.location.origin} onRedirectCallback={onRedirectCallback} >
             <ReduxProvider store={store}>
-                <DndProvider backend={HTML5Backend}>
-                    <App />
-                </DndProvider>
+                <App />
             </ReduxProvider>
         </Auth0Provider>
     </BrowserRouter>

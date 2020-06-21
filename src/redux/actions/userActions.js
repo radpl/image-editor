@@ -20,20 +20,6 @@ export function saveImageFailed() {
   return { type: types.SAVE_IMAGE_FAILED, image: {} };
 }
 
-export function signOutUserSuccess(user) {
-  return { type: types.SIGN_OUT_USER_SUCCESS, user };
-}
-
-export function signInProgress() {
-  return { type: types.SIGN_IN_PROGRESS, progress: true };
-}
-
-export function signIn() {
-  return function () {
-    return userApi.signIn();
-  };
-}
-
 export function getUser() {
   return function (dispatch) {
     return userApi.getUser()
@@ -53,26 +39,5 @@ export function getUser() {
 export function saveUserImage(image) {
   return function (dispatch) {
     return imageApi.saveImage(image);
-    // .then(ok => {
-    //   dispatch(saveImageSuccess({ ...ok }));
-    // })
-    // .catch(error => {
-    //   dispatch(saveImageFailed());
-    //   throw error;
-    // });
-  };
-}
-
-
-export function signOut(origin) {
-  return function (dispatch) {
-    return userApi
-      .signOut(origin)
-      .then(user => {
-        dispatch(signOutUserSuccess(user));
-      })
-      .catch(error => {
-        throw error;
-      });
   };
 }

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import './MainEditor.css';
+import React, { useEffect } from 'react';
+import { connect } from "react-redux";
 import ImageEditor from './editor/ImageEditor';
 import BackgroundContainer from './background/BackgroundContainer';
 import LogoContainer from './logo/LogoContainer';
@@ -7,27 +7,20 @@ import background from '../assets/bgAssets';
 import { getRandom, getRandomLogos, toDataUrl, searchImages } from '../api/sourceApi';
 import DrawContainer from "./text/DrawContainer";
 import { getImageLogos, saveImageLogosRemote } from "../redux/actions/logoActions";
-import { getImageBackgrounds, saveImageBackgroundsRemote } from "../redux/actions/backgroundActions";
-
-import { connect } from "react-redux";
-
+import { getImageBackgrounds, saveImageBackgroundsRemote, selectedBackground } from "../redux/actions/backgroundActions";
+import './MainEditor.css';
 
 function MainEditor(props) {
 
-  const [bgState, setBackground] = useState(background.empty);
-  const [images, setImages] = useState([]);
-  const [logos, setLogos] = useState([]);
-
-  const handleSelectBg = (image) => {
-    setBackground(image);
+  const handleSelectBg = (imageId) => {
+    props.selectedBackground(imageId);
   }
 
   const handleDeleteBg = (image) => {
-    setBackground(background.empty)
+    props.selectedBackground(-1);
   }
 
   const handleSearchImages = (searchTerm) => {
-    setImages([]);
     getSearchedImages(4, searchTerm);
   }
 
@@ -37,10 +30,10 @@ function MainEditor(props) {
       props.getImageBackgrounds(props.match.params.imageId);
 
     } else {
-      if (images.length === 0) {
+      if (props.images.length === 0) {
         getRandomImages(4);
       }
-      if (logos.length === 0) {
+      if (props.logoImages.length === 0) {
         getRandomLogosFetch(3);
       }
     }
@@ -53,7 +46,7 @@ function MainEditor(props) {
         getRandom().then((response) => {
           toDataUrl(response.url).then(img => {
             props.saveImageBackgroundsRemote("data:image/png[jpg];base64," + img);
-            setImages(oldArray => [...oldArray, "data:image/png[jpg];base64," + img]);
+            //setImages(oldArray => [...oldArray, "data:image/png[jpg];base64," + img]);
           });
         });
       }, 4000 * i)
@@ -66,7 +59,7 @@ function MainEditor(props) {
         getRandomLogos().then((response) => {
           toDataUrl(response.url).then(img => {
             props.saveImageLogosRemote("data:image/png[jpg];base64," + img);
-            setLogos(oldArray => [...oldArray, "data:image/png[jpg];base64," + img]);
+            //setLogos(oldArray => [...oldArray, "data:image/png[jpg];base64," + img]);
           });
         });
       }, 4000 * i)
@@ -79,7 +72,8 @@ function MainEditor(props) {
       setTimeout(() => {
         searchImages(serachTerm).then((response) => {
           toDataUrl(response.url).then(img => {
-            setImages(oldArray => [...oldArray, "data:image/png[jpg];base64," + img]);
+            props.saveImageBackgroundsRemote("data:image/png[jpg];base64," + img);
+            //setImages(oldArray => [...oldArray, "data:image/png[jpg];base64," + img]);
           });
         });
       }, 4000 * i)
@@ -95,7 +89,7 @@ function MainEditor(props) {
             handleSearchImages={handleSearchImages} backgroundImages={props.backgrounds} />
         </div>
         <div className="main-panel">
-          <ImageEditor selectedBackground={bgState} backgroundImages={props.backgrounds} logoImages={props.logoImages} />
+          <ImageEditor selectedBackground={props.bgSelected} backgroundImages={props.backgrounds} logoImages={props.logoImages} />
         </div>
         <div className="right-sidebar">
           <LogoContainer logos={props.logoImages} />
@@ -110,7 +104,8 @@ function mapStateToProps(state, ownProps) {
   return {
     user: state.user && state.user.db && state.user.db.user,
     images: state.images,
-    backgrounds: state.backgrounds,
+    backgrounds: state.backgrounds.backgrounds,
+    bgSelected: state.backgrounds.selected > -1 ? state.backgrounds.backgrounds[state.backgrounds.selected] : background.empty,
     logoImages: (state.logos && state.logos.logoImages) || []
   };
 }
@@ -119,7 +114,9 @@ const mapDispatchToProps = {
   getImageLogos,
   getImageBackgrounds,
   saveImageBackgroundsRemote,
-  saveImageLogosRemote
+  saveImageLogosRemote,
+  selectedBackground,
+
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainEditor)

@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect } from "react";
 import { useAuth0 } from "../../react-auth0-spa";
 import { Link, withRouter } from 'react-router-dom';
 import styles from './navbar.module.css';
 import { connect } from "react-redux";
-import { getUser, signIn, signOut } from "../../redux/actions/userActions";
-//import LoginForm from "./LoginForm";
+import { getUser } from "../../redux/actions/userActions";
 
 function NavBar(props) {
 
-  // const [isVisible, setVisible] = useState(false);
-  const { isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
+  const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
 
   const logoutWithRedirect = () =>
     logout({
@@ -50,7 +49,6 @@ function NavBar(props) {
           </div>
         }
       </nav>
-      {/* {isVisible && <LoginForm hideLogin={hideLogin} />} */}
     </>
   );
 }
@@ -62,8 +60,7 @@ function mapStateToProps(state, ownProps) {
 
 const mapDispatchToProps = {
   getUser
-  // signIn,
-  // signOut
 };
+
 const navBarWithRouter = withRouter(NavBar)
 export default connect(mapStateToProps, mapDispatchToProps)(navBarWithRouter);

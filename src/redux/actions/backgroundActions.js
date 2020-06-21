@@ -1,15 +1,6 @@
 import * as types from "./actionTypes";
 import * as imageApi from "../../api/imageApi";
 
-export function addBackground(logo) {
-  return { type: types.ADD_BACKGROUND, logo };
-}
-
-export function deleteBackground(logo) {
-  return { type: types.DELETE_BACKGROUND, logo };
-}
-
-
 export function saveBackgroundSuccess(image) {
   return { type: types.SAVE_BACKGROUND_SUCCESS, image };
 }
@@ -28,6 +19,10 @@ export function saveImageBackgroundsRemote(background) {
 
 export function saveImageBackgroundsFailed() {
   return { type: types.SAVE_IMAGE_BACKGROUNDS_FAILED, imageBackgrounds: [] };
+}
+
+export function selectedBackground(id) {
+  return { type: types.SELECTED_BACKGROUND, selected: id }
 }
 
 export function saveBackgrounds(background) {

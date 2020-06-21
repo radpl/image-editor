@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import SimpleHeader from '../common/SimpleHeader';
 import { getUserImages } from "../../redux/actions/imageActions";
 import ImageBrowser from "./ImageBrowser";
 import { connect } from 'react-redux';
 
 function BrowseContainer(props) {
-
-  // const [thumbs, setThumbs] = useState([]);
 
   useEffect(() => {
     props.getUserImages(props.user).then(res => console.log(res));

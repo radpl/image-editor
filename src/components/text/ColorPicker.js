@@ -1,28 +1,21 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { CompactPicker } from 'react-color';
 import styles from './colors.module.css';
 import { connect } from 'react-redux';
 import { changeColor } from "../../redux/actions/colorActions"
 
-class ColorPicker extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            selected: '#000',
-        };
+function ColorPicker(props) {
 
-    }
-    handleColorChange = (color) => {
-        this.props.changeColor(color.hex);
+    const handleColorChange = (color) => {
+        props.changeColor(color.hex);
     }
 
-    render() {
-        return (<div className={styles.pickerMain}><CompactPicker width="200px"
-            color={this.props.color}
-            onChangeComplete={this.handleColorChange} />
-        </div>);
-    }
+    return (<div className={styles.pickerMain}><CompactPicker width="200px"
+        color={props.color}
+        onChangeComplete={handleColorChange} />
+    </div>);
 }
+
 
 function mapStateToProps(state, ownProps) {
     return {

@@ -1,14 +1,12 @@
 import React, { useState, useRef } from "react";
 import { Stage, Layer, Line, Text, Image } from "react-konva";
 import { connect } from 'react-redux';
-//import useImage from 'use-image';
 import CustomImage from './CustomImage';
 import CustomText from './CustomText';
 import { addLogo, deleteLogo } from "../../redux/actions/logoActions";
 import { addText, deleteText } from "../../redux/actions/textActions";
 
 function Canvas(props) {
-
 
   const [lines, setLine] = useState([]);
   const [selectedId, selectShape] = useState(null);

@@ -1,7 +1,6 @@
 import React from 'react'
 import SimpleHeader from '../common/SimpleHeader';
 import styles from './logoimages.module.css';
-//import logos from '../../assets/logoAssets';
 import LogoElement from './LogoElement';
 
 export default function AddLogo(props) {

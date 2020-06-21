@@ -4,6 +4,6 @@ export default {
   user: {},
   color: "#000000",
   settings: {},
-  backgrounds: [],
+  backgrounds: { backgrounds: [], selected: -1 },
   images: []
 };
