@@ -16,8 +16,10 @@ function DrawContainer(props) {
   return <>
     <SimpleHeader size="smallLeft">Draw</SimpleHeader>
     <form style={{ textAlign: "left" }}>
-      <input type="checkbox" id="draw1" name="drawLine" value="freeline" checked={props.tool} onChange={handleChange} />
+      <input type="checkbox" id="draw1" name="drawLine" value="freeline" checked={props.tool && props.tool.freeline} onChange={handleChange} />
       <label for="draw1">Free line</label><br />
+      <input type="checkbox" id="draw2" name="drawRect" value="rectangle" checked={props.tool && props.tool.rectangle} onChange={handleChange} />
+      <label for="draw2">Rectangle</label><br />
     </form>
   </>
 

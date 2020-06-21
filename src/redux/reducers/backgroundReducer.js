@@ -15,6 +15,12 @@ export default function backgroundsReducer(state = initialState.backgrounds, act
         //const backgrounds = [...state, action.background];
         return backgrounds;
       }
+    case types.CLEAR_IMAGE_BACKGROUNDS:
+      {
+        const backgrounds = Object.assign({}, state, { backgrounds: [] });
+        //const backgrounds = [...state, action.background];
+        return backgrounds;
+      }
     case types.SELECTED_BACKGROUND:
       {
         const backgrounds = Object.assign({}, state, { selected: action.selected });

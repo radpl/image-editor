@@ -10,7 +10,6 @@ function CustomImage(props) {
 
   useEffect(() => {
     if (props.isSelected) {
-      // we need to attach transformer manually
       trRef.current.setNode(shapeRef.current);
       trRef.current.getLayer().batchDraw();
     }
@@ -32,7 +31,6 @@ function CustomImage(props) {
         <Transformer
           ref={trRef}
           boundBoxFunc={(oldBox, newBox) => {
-            // limit resize
             if (newBox.width < 5 || newBox.height < 5) {
               return oldBox;
             }

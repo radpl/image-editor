@@ -21,6 +21,9 @@ export function saveImageBackgroundsFailed() {
   return { type: types.SAVE_IMAGE_BACKGROUNDS_FAILED, imageBackgrounds: [] };
 }
 
+export function clearImageBackgrounds() {
+  return { type: types.CLEAR_IMAGE_BACKGROUNDS, imageBackgrounds: [] };
+}
 export function selectedBackground(id) {
   return { type: types.SELECTED_BACKGROUND, selected: id }
 }

@@ -1,10 +1,13 @@
 import React, { useState, useRef } from "react";
-import { Stage, Layer, Line, Text, Image } from "react-konva";
+import { Stage, Layer, Line, Text, Rect } from "react-konva";
 import { connect } from 'react-redux';
 import CustomImage from './CustomImage';
 import CustomText from './CustomText';
 import { addLogo, deleteLogo } from "../../redux/actions/logoActions";
 import { addText, deleteText } from "../../redux/actions/textActions";
+import CanvasImages from "./CanvasImages";
+import CanvasTexts from "./CanvasTexts";
+import CanvasRects from "./CanvasRects";
 
 function Canvas(props) {
 
@@ -12,14 +15,25 @@ function Canvas(props) {
   const [selectedId, selectShape] = useState(null);
   const [colors, setColor] = useState([]);
   const [selTextId, selectText] = useState(null);
+  const [rects, setRects] = useState([]);
+  const [selRectId, selectRect] = useState(null);
 
   const _drawing = useRef(false);
   const stageRef = useRef();
 
   const handleMouseDown = () => {
-    _drawing.current = true && !selectedId && props.tool && props.tool.freeline;
-    setColor([...colors, props.color]);
-    setLine([...lines, []]);
+    if (props.tool && props.tool.freeline) {
+      _drawing.current = true && !selectedId && props.tool && props.tool.freeline;
+      setColor([...colors, props.color]);
+      setLine([...lines, []]);
+    }
+    if (props.tool && props.tool.rectangle) {
+      _drawing.current = true && (selRectId === null) && props.tool && props.tool.rectangle;
+      const stage = stageRef.current.getStage();
+      const point = stage.getPointerPosition();
+      const rect = { x: point.x, y: point.y, width: 0, height: 0, fill: props.color };
+      setRects([...rects, rect]);
+    }
   }
 
   const handleMouseUp = () => {
@@ -33,10 +47,19 @@ function Canvas(props) {
     const stage = stageRef.current.getStage();
     const point = stage.getPointerPosition();
 
-    let lastLine = lines[lines.length - 1];
-    lastLine = lastLine.concat([point.x, point.y]);
-    lines.splice(lines.length - 1, 1, lastLine);
-    setLine(lines.concat());
+    if (props.tool && props.tool.freeline) {
+      let lastLine = lines[lines.length - 1];
+      lastLine = lastLine.concat([point.x, point.y]);
+      lines.splice(lines.length - 1, 1, lastLine);
+      setLine(lines.concat());
+    }
+    if (props.tool && props.tool.rectangle) {
+      const rectsCopy = [...rects];
+      let lastRect = rectsCopy[rectsCopy.length - 1];
+      lastRect.width = point.x - lastRect.x;
+      lastRect.height = point.y - lastRect.y;
+      setRects(rectsCopy);
+    }
   };
 
   const checkDeselect = e => {
@@ -44,8 +67,15 @@ function Canvas(props) {
     if (clickedOnEmpty) {
       selectShape(null);
       selectText(null);
+      selectRect(null);
     }
   };
+
+  const removeRect = (id) => {
+    const rectsCopy = rects.filter((rect, index) => index !== id);
+    setRects(rectsCopy);
+    selectRect(null);
+  }
 
   return (
     <Stage
@@ -59,62 +89,10 @@ function Canvas(props) {
       onTouchStart={checkDeselect}
     >
       <Layer>
-        {lines && lines.map((line, i) => (
-          <Line key={i} points={line} stroke={colors[i]} draggable={true} />
-        ))}
-        {props.texts && Object.keys(props.texts).map((key, index) => {
-          return (<>
-            {props.texts[key].render && <CustomText text={props.texts[key].value} draggable={true}
-              fontFamily={props.texts[key].font}
-              fontSize={props.texts[key].fontSize}
-              fill={props.texts[key].color}
-              isSelected={index === selTextId}
-              onSelect={(e) => {
-                selectText(index);
-                const width = e.target.width();
-                const height = e.target.height();
-                const x = e.target.x();
-                const y = e.target.y();
-                props.addText({ ...props.texts[key], x, y, width, height })
-              }}
-              onDragEnd={e => {
-                const width = e.target.width();
-                const height = e.target.height();
-                const x = e.target.x();
-                const y = e.target.y();
-                props.addText({ ...props.texts[key], x, y, width, height })
-              }}
-
-            />}
-            {(index === selTextId) && props.texts[key].render && <Text onClick={() => props.addText({ id: key, render: false })} text="x" fontSize="15" strokeWidth="0.5" fontStyle="bold" fill="#000000" stroke="#FFFFFF" x={props.texts[key].x + props.texts[key].width + 5} y={props.texts[key].y - 15} />}
-          </>)
-        })}
-        {props.logos && Object.keys(props.logos).map((key, index) => {
-          return (
-            <>
-              {props.logos[key].render &&
-                <CustomImage src={props.logoImages[+props.logos[key].logoid - 1]} draggable={true} x={props.logos[key].x} y={props.logos[key].y}
-                  isSelected={index === selectedId}
-                  onSelect={(e) => {
-                    selectShape(index);
-                    const width = e.target.width();
-                    const height = e.target.height();
-                    const x = e.target.x();
-                    const y = e.target.y();
-                    props.addLogo({ ...props.logos[key], x, y, width, height })
-                  }}
-                  onDragEnd={e => {
-                    const width = e.target.width();
-                    const height = e.target.height();
-                    const x = e.target.x();
-                    const y = e.target.y();
-                    props.addLogo({ ...props.logos[key], x, y, width, height })
-                  }} />}
-              {(index === selectedId) && props.logos[key].render && <Text onClick={() => props.addLogo({ id: key, render: false })} text="x" fontSize="15" strokeWidth="0.5" fontStyle="bold" fill="#000000" stroke="#FFFFFF" x={props.logos[key].x + props.logos[key].width + 5} y={props.logos[key].y - 15} />}
-            </>
-          )
-        })}
-
+        <CanvasImages selectedId={selectedId} selectShape={selectShape} {...props} />
+        <CanvasTexts selTextId={selTextId} selectText={selectText} {...props} />
+        {lines && lines.map((line, i) => (<Line key={i} points={line} stroke={colors[i]} draggable={true} />))}
+        <CanvasRects selRectId={selRectId} selectRect={selectRect} {...props} rects={rects} removeRect={removeRect} />
       </Layer>
     </Stage>
   )

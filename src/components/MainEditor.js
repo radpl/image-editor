@@ -7,7 +7,7 @@ import background from '../assets/bgAssets';
 import { getRandom, getRandomLogos, toDataUrl, searchImages } from '../api/sourceApi';
 import DrawContainer from "./text/DrawContainer";
 import { getImageLogos, saveImageLogosRemote } from "../redux/actions/logoActions";
-import { getImageBackgrounds, saveImageBackgroundsRemote, selectedBackground } from "../redux/actions/backgroundActions";
+import { getImageBackgrounds, saveImageBackgroundsRemote, selectedBackground, clearImageBackgrounds } from "../redux/actions/backgroundActions";
 import './MainEditor.css';
 
 function MainEditor(props) {
@@ -68,6 +68,7 @@ function MainEditor(props) {
   }
 
   const getSearchedImages = (number, serachTerm) => {
+    props.clearImageBackgrounds();
     for (let i = 0; i < number; i++) {
       setTimeout(() => {
         searchImages(serachTerm).then((response) => {
@@ -116,6 +117,7 @@ const mapDispatchToProps = {
   saveImageBackgroundsRemote,
   saveImageLogosRemote,
   selectedBackground,
+  clearImageBackgrounds,
 
 };
 
