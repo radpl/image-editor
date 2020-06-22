@@ -8,6 +8,7 @@ import { addText, deleteText } from "../../redux/actions/textActions";
 import CanvasImages from "./CanvasImages";
 import CanvasTexts from "./CanvasTexts";
 import CanvasRects from "./CanvasRects";
+import CanvasLines from "./CanvasLines";
 
 function Canvas(props) {
 
@@ -17,13 +18,14 @@ function Canvas(props) {
   const [selTextId, selectText] = useState(null);
   const [rects, setRects] = useState([]);
   const [selRectId, selectRect] = useState(null);
+  const [selLineId, selectLine] = useState(null);
 
   const _drawing = useRef(false);
   const stageRef = useRef();
 
   const handleMouseDown = () => {
     if (props.tool && props.tool.freeline) {
-      _drawing.current = true && !selectedId && props.tool && props.tool.freeline;
+      _drawing.current = true && !selectedId && (selLineId === null) && props.tool && props.tool.freeline;
       setColor([...colors, props.color]);
       setLine([...lines, []]);
     }
@@ -77,6 +79,11 @@ function Canvas(props) {
     selectRect(null);
   }
 
+  const removeLine = (id) => {
+    const linesCopy = lines.filter((line, index) => index !== id);
+    setLine(linesCopy);
+    selectLine(null);
+  }
   return (
     <Stage
       width={400}
@@ -90,9 +97,10 @@ function Canvas(props) {
     >
       <Layer>
         <CanvasImages selectedId={selectedId} selectShape={selectShape} {...props} />
-        <CanvasTexts selTextId={selTextId} selectText={selectText} {...props} />
-        {lines && lines.map((line, i) => (<Line key={i} points={line} stroke={colors[i]} draggable={true} />))}
+        <CanvasLines selLineId={selLineId} selectLine={selectLine} lines={lines} colors={colors} removeLine={removeLine} {...props} />
+        {/* {lines && lines.map((line, i) => (<Line key={i} points={line} stroke={colors[i]} draggable={true} />))} */}
         <CanvasRects selRectId={selRectId} selectRect={selectRect} {...props} rects={rects} removeRect={removeRect} />
+        <CanvasTexts selTextId={selTextId} selectText={selectText} {...props} />
       </Layer>
     </Stage>
   )
